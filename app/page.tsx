@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const projects = [
   {
@@ -127,6 +127,24 @@ function ProjectVisual({ variant }: { variant: string }) {
 export default function Home() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("portfolio-theme");
+    if (savedTheme === "dark" || savedTheme === "light") {
+      setTheme(savedTheme);
+      return;
+    }
+
+    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      setTheme("light");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    window.localStorage.setItem("portfolio-theme", nextTheme);
+  };
+
   return (
     <main className="portfolio" data-theme={theme}>
       <div className="page-grid" aria-hidden="true" />
@@ -149,7 +167,8 @@ export default function Home() {
         <button
           className="theme-toggle"
           type="button"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          onClick={toggleTheme}
+          aria-pressed={theme === "light"}
           aria-label={
             theme === "dark" ? "Gunakan tema terang" : "Gunakan tema gelap"
           }
