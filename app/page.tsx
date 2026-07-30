@@ -209,15 +209,15 @@ export default function Home() {
             <h2>Fokus</h2>
             <ul className="focus-list">
               <li>
-                <span>IT Support</span>
+                <span>IT Support & Troubleshooting</span>
                 <b>01</b>
               </li>
               <li>
-                <span>Data Management</span>
+                <span>Data Management & Reporting</span>
                 <b>02</b>
               </li>
               <li>
-                <span>Web Development</span>
+                <span>IT Asset Management</span>
                 <b>03</b>
               </li>
             </ul>
