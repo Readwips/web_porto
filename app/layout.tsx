@@ -26,16 +26,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(origin),
-    title: "Nama Anda — Web Developer Portfolio",
+    title: "Setyo Agung Prabowo — IT Support & Data Management",
     description:
-      "Portofolio web developer Indonesia yang memadukan strategi, desain, dan teknologi untuk menciptakan pengalaman digital yang jernih.",
+      "Portofolio Setyo Agung Prabowo, lulusan Sistem Informasi yang berfokus pada IT Support, manajemen data, dan pengembangan aplikasi internal.",
     openGraph: {
       type: "website",
       locale: "id_ID",
       url: origin,
-      title: "Nama Anda — Web Developer Portfolio",
+      title: "Setyo Agung Prabowo — IT Support & Data Management",
       description:
-        "Membangun pengalaman digital yang jernih, cepat, dan manusiawi.",
+        "Portofolio proyek IT Support, manajemen data, dan pengembangan aplikasi internal.",
       images: [
         {
           url: `${origin}/og.png`,
@@ -47,9 +47,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Nama Anda — Web Developer Portfolio",
+      title: "Setyo Agung Prabowo — IT Support & Data Management",
       description:
-        "Membangun pengalaman digital yang jernih, cepat, dan manusiawi.",
+        "Portofolio proyek IT Support, manajemen data, dan pengembangan aplikasi internal.",
       images: [`${origin}/og.png`],
     },
   };

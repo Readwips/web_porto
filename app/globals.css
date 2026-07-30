@@ -620,13 +620,21 @@ a {
   font-weight: 650;
 }
 
-.project-title span {
+.project-title > span {
   padding: 4px 8px;
   border: 1px solid rgba(116, 185, 255, 0.3);
   border-radius: 999px;
   color: var(--accent);
   font-family: var(--mono);
   font-size: 0.52rem;
+}
+
+.project-title h3 a {
+  transition: color 150ms ease;
+}
+
+.project-title h3 a:hover {
+  color: var(--accent);
 }
 
 .project-item p {
@@ -642,13 +650,20 @@ a {
 }
 
 .content-hint {
-  margin: 18px 0 0 !important;
+  display: block;
+  margin: 18px 0 0;
   padding: 12px 14px;
   border-left: 3px solid var(--accent);
   border-radius: 0 8px 8px 0;
   background: rgba(116, 185, 255, 0.06);
-  font-size: 0.76rem !important;
-  line-height: 1.55 !important;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.55;
+  transition: color 150ms ease;
+}
+
+.content-hint:hover {
+  color: var(--accent);
 }
 
 .learning-grid {

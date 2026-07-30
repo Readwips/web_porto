@@ -4,48 +4,51 @@ import { useEffect, useMemo, useState } from "react";
 
 const searchItems = [
   {
-    label: "Tentang Saya",
-    description: "Perkenalan singkat dan cara saya bekerja.",
+    label: "About Me",
+    description: "Latar belakang dan fokus karier saya.",
     href: "#tentang",
   },
   {
-    label: "Yang Saya Kerjakan",
-    description: "Fokus layanan dan kemampuan utama.",
+    label: "What I Do",
+    description: "Aktivitas dan kemampuan yang sedang saya kembangkan.",
     href: "#pekerjaan",
   },
   {
-    label: "Proyek Pilihan",
-    description: "Contoh arah proyek digital.",
+    label: "Latest Works",
+    description: "Proyek terbaru yang tersedia di GitHub.",
     href: "#proyek",
   },
   {
-    label: "Sedang Dipelajari",
-    description: "Topik yang sedang saya dalami.",
+    label: "Currently Learning",
+    description: "Keahlian yang sedang saya perdalam.",
     href: "#belajar",
   },
 ];
 
 const projects = [
   {
-    name: "Ruang Kerja",
-    status: "Konsep",
+    name: "IT Helpdesk & Manajemen Aset",
+    status: "Terbaru",
     description:
-      "Workspace kolaboratif untuk menyatukan tugas, percakapan, dan progres tim dalam satu tempat.",
-    stack: "Next.js · Product Design",
+      "Aplikasi Laravel untuk mengelola workflow tiket dukungan IT, inventaris perangkat, penugasan aset, riwayat perbaikan, knowledge base, dashboard, dan laporan.",
+    stack: "Laravel · MySQL · Tailwind CSS · Chart.js",
+    href: "https://github.com/Readwips/web_helpdesk",
   },
   {
-    name: "Saku Tumbuh",
-    status: "Konsep",
+    name: "Web Katalog Buku",
+    status: "Project",
     description:
-      "Dasbor finansial yang membantu pengguna memahami arus uang tanpa grafik yang membingungkan.",
-    stack: "React · Data Visualization",
+      "Aplikasi katalog yang membantu pengunjung mencari buku berdasarkan judul, penulis, ISBN, atau penerbit serta melihat stok dan lokasi rak.",
+    stack: "Laravel · PHP · Blade · Database",
+    href: "https://github.com/Readwips/Web_Katalog_Buku",
   },
   {
-    name: "Arah Kota",
-    status: "Konsep",
+    name: "Tracking Barang & Kontainer",
+    status: "Project",
     description:
-      "Pengalaman eksplorasi tempat lokal dengan rekomendasi yang ringkas dan terasa personal.",
-    stack: "UX Research · Prototype",
+      "Sistem tracking logistik untuk memantau barang dan kontainer dengan dukungan dashboard, REST API, serta visualisasi data operasional.",
+    stack: "Laravel · MySQL · REST API · Chart.js",
+    href: "https://github.com/Readwips/web_tracking_barang",
   },
 ];
 
@@ -96,7 +99,7 @@ export default function Home() {
             <span className="brand-icon" aria-hidden="true">
               ⌂
             </span>
-            <strong>Nama Anda</strong>
+            <strong>Setyo Agung</strong>
           </a>
 
           <nav aria-label="Navigasi utama">
@@ -170,18 +173,18 @@ export default function Home() {
         <aside className="sidebar" aria-label="Profil dan keahlian">
           <section className="profile-card">
             <div className="avatar" aria-label="Placeholder foto profil">
-              <span>NA</span>
+              <span>SA</span>
             </div>
-            <h1>Nama Anda</h1>
-            <p className="profile-role">Web Developer · Indonesia</p>
+            <h1>Setyo Agung Prabowo</h1>
+            <p className="profile-role">IT Support · Data Management</p>
             <span className="profile-rule" />
             <p className="profile-tagline">
-              Membuat pengalaman digital yang jernih, cepat, dan nyaman
-              digunakan.
+              Lulusan S1 Sistem Informasi yang berfokus pada dukungan teknologi
+              dan pengelolaan data.
             </p>
             <div className="social-row">
               <a
-                href="https://github.com/"
+                href="https://github.com/Readwips"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub"
@@ -189,10 +192,10 @@ export default function Home() {
                 GH
               </a>
               <a
-                href="https://www.linkedin.com/"
+                href="https://www.instagram.com/readwips/"
                 target="_blank"
                 rel="noreferrer"
-                aria-label="LinkedIn"
+                aria-label="Instagram"
               >
                 IN
               </a>
@@ -206,15 +209,15 @@ export default function Home() {
             <h2>Fokus</h2>
             <ul className="focus-list">
               <li>
-                <span>Frontend Development</span>
+                <span>IT Support</span>
                 <b>01</b>
               </li>
               <li>
-                <span>Backend & API</span>
+                <span>Data Management</span>
                 <b>02</b>
               </li>
               <li>
-                <span>Product Design</span>
+                <span>Web Development</span>
                 <b>03</b>
               </li>
             </ul>
@@ -224,13 +227,13 @@ export default function Home() {
             <h2>Teknologi</h2>
             <div className="tag-cloud">
               {[
-                "TypeScript",
-                "React",
-                "Next.js",
-                "Node.js",
-                "API",
-                "UI/UX",
-                "Cloudflare",
+                "Laravel",
+                "PHP",
+                "MySQL",
+                "REST API",
+                "Chart.js",
+                "Google Sheets",
+                "Troubleshooting",
               ].map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
@@ -241,17 +244,17 @@ export default function Home() {
         <article className="article-card">
           <div className="article-heading" id="tentang">
             <span className="article-kicker">PROFIL / 2026</span>
-            <h2>Tentang Saya</h2>
+            <h2>About Me</h2>
             <p className="article-lead">
-              Halo! Saya <strong>Nama Anda</strong>, seorang web developer yang
-              senang mengubah kebutuhan yang rumit menjadi produk digital yang
-              sederhana dan berguna.
+              Halo! Saya <strong>Setyo Agung Prabowo</strong>, lulusan S1 Sistem
+              Informasi yang sedang membangun karier di bidang{" "}
+              <strong>IT Support dan Manajemen Data</strong>.
             </p>
             <p>
-              Saya menikmati proses dari memahami masalah, menyusun alur,
-              membangun antarmuka, sampai memastikan produk berjalan dengan
-              baik. Tujuan saya sederhana: membuat teknologi terasa lebih mudah
-              bagi orang yang menggunakannya.
+              Saya terus mengembangkan kemampuan melalui berbagai proyek untuk
+              memperoleh pengalaman praktis, memperdalam pemahaman tentang
+              pengelolaan sistem dan data, serta mempersiapkan diri memberikan
+              dukungan teknologi yang andal bagi organisasi.
             </p>
           </div>
 
@@ -259,24 +262,25 @@ export default function Home() {
 
           <section className="article-section" id="pekerjaan">
             <h2>
-              <span aria-hidden="true">💡</span> Yang Saya Kerjakan
+              <span aria-hidden="true">💡</span> What I Do
             </h2>
             <p>Sebagian besar waktu saya digunakan untuk:</p>
             <ul className="work-list">
               <li>
-                Membangun aplikasi web yang <strong>responsif dan cepat</strong>
+                Mempelajari alur <strong>IT helpdesk</strong>, pencatatan tiket,
+                troubleshooting, dan pengelolaan aset TI
               </li>
               <li>
-                Menyusun API dan alur data yang{" "}
-                <strong>rapi serta mudah dirawat</strong>
+                Merancang serta mengelola <strong>database relasional</strong>{" "}
+                untuk inventaris, laporan, dan kebutuhan operasional
               </li>
               <li>
-                Merancang antarmuka dengan{" "}
-                <strong>hierarki yang mudah dipahami</strong>
+                Membangun aplikasi internal menggunakan{" "}
+                <strong>Laravel, PHP, MySQL, dan REST API</strong>
               </li>
               <li>
-                Berkolaborasi dari tahap ide hingga{" "}
-                <strong>produk siap digunakan</strong>
+                Membuat dashboard, visualisasi, dan{" "}
+                <strong>automasi pencatatan data</strong> ke Google Sheets
               </li>
             </ul>
           </section>
@@ -286,9 +290,9 @@ export default function Home() {
           <section className="article-section" id="proyek">
             <div className="section-title-row">
               <h2>
-                <span aria-hidden="true">🛠</span> Proyek Pilihan
+                <span aria-hidden="true">🛠</span> Latest Works
               </h2>
-              <span className="small-note">CONTOH KONTEN</span>
+              <span className="small-note">GITHUB PROJECTS</span>
             </div>
             <div className="project-list">
               {projects.map((project) => (
@@ -298,7 +302,15 @@ export default function Home() {
                   </div>
                   <div>
                     <div className="project-title">
-                      <h3>{project.name}</h3>
+                      <h3>
+                        <a
+                          href={project.href}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {project.name} <span aria-hidden="true">↗</span>
+                        </a>
+                      </h3>
                       <span>{project.status}</span>
                     </div>
                     <p>{project.description}</p>
@@ -307,33 +319,46 @@ export default function Home() {
                 </article>
               ))}
             </div>
-            <p className="content-hint">
-              Tiga proyek di atas adalah contoh. Anda dapat menggantinya dengan
-              karya asli beserta tautan demo dan repositori.
-            </p>
+            <a
+              className="content-hint"
+              href="https://github.com/Readwips?tab=repositories"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Lihat seluruh proyek publik saya di GitHub ↗
+            </a>
           </section>
 
           <hr />
 
           <section className="article-section" id="belajar">
             <h2>
-              <span aria-hidden="true">🌱</span> Sedang Dipelajari
+              <span aria-hidden="true">🌱</span> Currently Learning
             </h2>
             <div className="learning-grid">
               <div>
                 <span>01</span>
-                <strong>System Design</strong>
-                <p>Menyusun sistem yang tetap sederhana saat skala bertambah.</p>
+                <strong>IT Support Operations</strong>
+                <p>
+                  Troubleshooting, workflow tiket, dokumentasi solusi, dan
+                  pengelolaan inventaris perangkat.
+                </p>
               </div>
               <div>
                 <span>02</span>
-                <strong>Product Strategy</strong>
-                <p>Menghubungkan kebutuhan pengguna dan tujuan bisnis.</p>
+                <strong>Database & Data Management</strong>
+                <p>
+                  Perancangan database relasional, kualitas data, transaksi,
+                  pelaporan, dan visualisasi informasi.
+                </p>
               </div>
               <div>
                 <span>03</span>
-                <strong>Performance</strong>
-                <p>Membuat pengalaman web yang terasa ringan di berbagai perangkat.</p>
+                <strong>Laravel & Automation</strong>
+                <p>
+                  Pengembangan aplikasi internal, REST API, pengujian, keamanan,
+                  serta integrasi data dengan Google Sheets.
+                </p>
               </div>
             </div>
           </section>
@@ -360,8 +385,8 @@ export default function Home() {
 
       <footer className="footer">
         <div>
-          <span>© 2026 Nama Anda.</span>
-          <span>Web Developer Portfolio</span>
+          <span>© 2026 Setyo Agung Prabowo.</span>
+          <span>IT Support & Data Management Portfolio</span>
         </div>
         <a href="#top">Kembali ke atas ↑</a>
       </footer>
