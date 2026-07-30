@@ -230,10 +230,12 @@ export default function Home() {
                 "Laravel",
                 "PHP",
                 "MySQL",
+                "SQLite",
                 "REST API",
                 "Chart.js",
-                "Google Sheets",
-                "Troubleshooting",
+                "Google Sheets API",
+                "Node.js",
+                "Git & GitHub",
               ].map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
