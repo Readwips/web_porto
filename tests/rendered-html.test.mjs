@@ -33,7 +33,8 @@ test("server-renders the complete portfolio", async () => {
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="id"/i);
   assert.match(html, /Nama Anda — Web Developer Portfolio/);
-  assert.match(html, /Produk digital yang/);
+  assert.match(html, /Tentang Saya/);
+  assert.match(html, /Yang Saya Kerjakan/);
   assert.match(html, /Ruang Kerja/);
   assert.match(html, /Saku Tumbuh/);
   assert.match(html, /Arah Kota/);
