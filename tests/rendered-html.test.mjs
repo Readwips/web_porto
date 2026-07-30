@@ -52,6 +52,11 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /portfolio-theme/);
   assert.match(page, /aria-label="Navigasi utama"/);
   assert.match(page, /prefers-color-scheme: light/);
+  assert.match(page, /IntersectionObserver/);
+  assert.match(page, /aria-expanded=\{isOpen\}/);
+  assert.match(page, /selectedTechnology/);
+  assert.match(page, /reading-progress/);
+  assert.match(page, /back-to-top/);
   assert.match(layout, /generateMetadata/);
   assert.match(layout, /\/og\.png/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
