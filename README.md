@@ -1,7 +1,7 @@
 # Personal Portfolio
 
-Portofolio satu halaman untuk web developer dengan gaya editorial, tema gelap
-dan terang, layout responsif, serta kartu Open Graph khusus.
+Portofolio satu halaman untuk web developer dengan layout blog yang sederhana,
+tema gelap dan terang, navigasi pencarian, serta kartu Open Graph khusus.
 
 ## Menjalankan proyek
 
