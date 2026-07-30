@@ -314,23 +314,31 @@ export default function Home() {
             </p>
             <div className="social-row">
               <a
-                href="https://github.com/Readwips"
+                href="https://www.facebook.com/loempers"
                 target="_blank"
                 rel="noreferrer"
-                aria-label="GitHub"
+                aria-label="Facebook Setyo Agung Prabowo"
+                title="Facebook"
               >
-                GH
+                FB
               </a>
               <a
                 href="https://www.instagram.com/readwips/"
                 target="_blank"
                 rel="noreferrer"
-                aria-label="Instagram"
+                aria-label="Instagram Setyo Agung Prabowo"
+                title="Instagram"
               >
-                IN
+                IG
               </a>
-              <a href="mailto:hello@domainanda.com" aria-label="Email">
-                @
+              <a
+                href="https://github.com/Readwips"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub Setyo Agung Prabowo"
+                title="GitHub"
+              >
+                GH
               </a>
             </div>
           </section>
