@@ -23,8 +23,9 @@ npm test
 
 Semua konten utama berada di `app/page.tsx`.
 
-- Ganti `NAMA ANDA`, `Nama Anda`, deskripsi singkat, dan lokasi.
-- Ganti tiga data proyek pada konstanta `projects`.
+- Identitas Setyo Agung Prabowo dan deskripsi profesional berada langsung di
+  komponen halaman.
+- Proyek aktual beserta tautan GitHub berada pada konstanta `projects`.
 - Ganti alamat `hello@domainanda.com`.
 - Ganti tautan GitHub dan LinkedIn di bagian kontak.
 - Sesuaikan palet, tipografi, serta jarak di `app/globals.css`.
