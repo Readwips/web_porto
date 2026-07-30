@@ -33,6 +33,11 @@ const projects = [
       "Aplikasi Laravel untuk mengelola workflow tiket dukungan IT, inventaris perangkat, penugasan aset, riwayat perbaikan, knowledge base, dashboard, dan laporan.",
     stack: "Laravel · MySQL · Tailwind CSS · Chart.js",
     href: "https://github.com/Readwips/web_helpdesk",
+    details: [
+      "Workflow tiket dan pembagian hak akses berdasarkan role",
+      "Inventaris, penugasan, serta riwayat perbaikan aset TI",
+      "Dashboard operasional, knowledge base, dan laporan",
+    ],
   },
   {
     name: "Web Katalog Buku",
@@ -41,6 +46,11 @@ const projects = [
       "Aplikasi katalog yang membantu pengunjung mencari buku berdasarkan judul, penulis, ISBN, atau penerbit serta melihat stok dan lokasi rak.",
     stack: "Laravel · PHP · Blade · Database",
     href: "https://github.com/Readwips/Web_Katalog_Buku",
+    details: [
+      "Pencarian berdasarkan judul, penulis, ISBN, atau penerbit",
+      "Informasi stok dan lokasi rak",
+      "Antarmuka sederhana yang dapat digunakan tanpa login",
+    ],
   },
   {
     name: "Tracking Barang & Kontainer",
@@ -49,6 +59,59 @@ const projects = [
       "Sistem tracking logistik untuk memantau barang dan kontainer dengan dukungan dashboard, REST API, serta visualisasi data operasional.",
     stack: "Laravel · MySQL · REST API · Chart.js",
     href: "https://github.com/Readwips/web_tracking_barang",
+    details: [
+      "Pencatatan dan pemantauan data barang serta kontainer",
+      "Integrasi data melalui REST API",
+      "Dashboard dan visualisasi data operasional",
+    ],
+  },
+];
+
+const technologies = [
+  {
+    name: "Laravel",
+    description:
+      "Framework utama yang digunakan untuk membangun aplikasi helpdesk, katalog, dan tracking.",
+  },
+  {
+    name: "PHP",
+    description:
+      "Bahasa backend yang digunakan pada proyek aplikasi internal berbasis web.",
+  },
+  {
+    name: "MySQL",
+    description:
+      "Basis data relasional untuk tiket, inventaris, katalog, tracking, dan laporan.",
+  },
+  {
+    name: "SQLite",
+    description:
+      "Basis data ringan untuk pengembangan, pengujian, dan aplikasi dengan kebutuhan sederhana.",
+  },
+  {
+    name: "REST API",
+    description:
+      "Digunakan untuk pertukaran data antarsistem pada proyek tracking dan aplikasi internal.",
+  },
+  {
+    name: "Chart.js",
+    description:
+      "Visualisasi data pada dashboard agar informasi operasional lebih mudah dipahami.",
+  },
+  {
+    name: "Google Sheets API",
+    description:
+      "Integrasi untuk mencatat data terstruktur secara otomatis ke Google Sheets.",
+  },
+  {
+    name: "Node.js",
+    description:
+      "Runtime yang digunakan pada proyek automasi pesan WhatsApp ke Google Sheets.",
+  },
+  {
+    name: "Git & GitHub",
+    description:
+      "Digunakan untuk version control, dokumentasi perubahan, dan publikasi proyek.",
   },
 ];
 
@@ -56,17 +119,63 @@ export default function Home() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("top");
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [openProject, setOpenProject] = useState<number | null>(0);
+  const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("portfolio-theme");
-    if (savedTheme === "dark" || savedTheme === "light") {
-      setTheme(savedTheme);
-      return;
-    }
+    const preferredTheme =
+      savedTheme === "dark" || savedTheme === "light"
+        ? savedTheme
+        : window.matchMedia("(prefers-color-scheme: light)").matches
+          ? "light"
+          : "dark";
+    const frame = window.requestAnimationFrame(() => setTheme(preferredTheme));
 
-    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      setTheme("light");
-    }
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    const updateScrollState = () => {
+      const scrollableHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const progress =
+        scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+      setScrollProgress(Math.min(Math.max(progress, 0), 1));
+      setShowBackToTop(window.scrollY > 520);
+    };
+
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visibleEntry?.target.id) {
+          setActiveSection(visibleEntry.target.id);
+        }
+      },
+      {
+        rootMargin: "-25% 0px -55% 0px",
+        threshold: [0.05, 0.25, 0.5],
+      },
+    );
+
+    ["top", "tentang", "pekerjaan", "proyek", "belajar"].forEach((id) => {
+      const section = document.getElementById(id);
+      if (section) sectionObserver.observe(section);
+    });
+
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", updateScrollState);
+      sectionObserver.disconnect();
+    };
   }, []);
 
   const results = useMemo(() => {
@@ -91,8 +200,15 @@ export default function Home() {
     setQuery("");
   };
 
+  const selectedTechnologyData =
+    technologies.find((technology) => technology.name === selectedTechnology) ??
+    technologies[0];
+
   return (
     <main className="portfolio" data-theme={theme}>
+      <div className="reading-progress" aria-hidden="true">
+        <span style={{ transform: `scaleX(${scrollProgress})` }} />
+      </div>
       <header className="topbar">
         <div className="nav-shell">
           <a className="brand" href="#top" aria-label="Kembali ke atas">
@@ -103,9 +219,25 @@ export default function Home() {
           </a>
 
           <nav aria-label="Navigasi utama">
-            <a href="#top">Beranda</a>
-            <a href="#proyek">Karya</a>
-            <a href="#tentang">Tentang</a>
+            <a className={activeSection === "top" ? "active" : ""} href="#top">
+              Beranda
+            </a>
+            <a
+              className={activeSection === "proyek" ? "active" : ""}
+              href="#proyek"
+            >
+              Karya
+            </a>
+            <a
+              className={
+                ["tentang", "pekerjaan", "belajar"].includes(activeSection)
+                  ? "active"
+                  : ""
+              }
+              href="#tentang"
+            >
+              Tentang
+            </a>
           </nav>
 
           <div className="nav-tools">
@@ -120,7 +252,6 @@ export default function Home() {
                 onFocus={() => setSearchOpen(true)}
                 placeholder="Cari"
                 aria-label="Cari bagian portofolio"
-                aria-expanded={searchOpen}
               />
               {searchOpen && (
                 <div className="search-results">
@@ -225,19 +356,23 @@ export default function Home() {
           <section className="side-widget">
             <h2>Teknologi</h2>
             <div className="tag-cloud">
-              {[
-                "Laravel",
-                "PHP",
-                "MySQL",
-                "SQLite",
-                "REST API",
-                "Chart.js",
-                "Google Sheets API",
-                "Node.js",
-                "Git & GitHub",
-              ].map((tag) => (
-                <span key={tag}>{tag}</span>
+              {technologies.map((technology) => (
+                <button
+                  className={
+                    selectedTechnology === technology.name ? "active" : ""
+                  }
+                  key={technology.name}
+                  type="button"
+                  onClick={() => setSelectedTechnology(technology.name)}
+                  aria-pressed={selectedTechnology === technology.name}
+                >
+                  {technology.name}
+                </button>
               ))}
+            </div>
+            <div className="technology-detail" aria-live="polite">
+              <strong>{selectedTechnologyData.name}</strong>
+              <p>{selectedTechnologyData.description}</p>
             </div>
           </section>
         </aside>
@@ -296,10 +431,16 @@ export default function Home() {
               <span className="small-note">GITHUB PROJECTS</span>
             </div>
             <div className="project-list">
-              {projects.map((project) => (
-                <article className="project-item" key={project.name}>
+              {projects.map((project, index) => {
+                const isOpen = openProject === index;
+
+                return (
+                <article
+                  className={`project-item ${isOpen ? "open" : ""}`}
+                  key={project.name}
+                >
                   <div className="project-number" aria-hidden="true">
-                    {String(projects.indexOf(project) + 1).padStart(2, "0")}
+                    {String(index + 1).padStart(2, "0")}
                   </div>
                   <div>
                     <div className="project-title">
@@ -312,13 +453,39 @@ export default function Home() {
                           {project.name} <span aria-hidden="true">↗</span>
                         </a>
                       </h3>
-                      <span>{project.status}</span>
+                      <div className="project-actions">
+                        <span>{project.status}</span>
+                        <button
+                          type="button"
+                          onClick={() => setOpenProject(isOpen ? null : index)}
+                          aria-expanded={isOpen}
+                          aria-controls={`project-details-${index}`}
+                        >
+                          {isOpen ? "Tutup" : "Detail"}
+                          <span aria-hidden="true">⌄</span>
+                        </button>
+                      </div>
                     </div>
                     <p>{project.description}</p>
                     <small>{project.stack}</small>
+                    <div
+                      className="project-details"
+                      id={`project-details-${index}`}
+                      aria-hidden={!isOpen}
+                    >
+                      <div>
+                        <strong>Fitur utama</strong>
+                        <ul>
+                          {project.details.map((detail) => (
+                            <li key={detail}>{detail}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
             <a
               className="content-hint"
@@ -366,6 +533,16 @@ export default function Home() {
 
         </article>
       </div>
+
+      <button
+        className={`back-to-top ${showBackToTop ? "visible" : ""}`}
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Kembali ke bagian atas"
+        tabIndex={showBackToTop ? 0 : -1}
+      >
+        ↑
+      </button>
 
       <footer className="footer">
         <div>
