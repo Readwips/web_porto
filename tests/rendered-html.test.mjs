@@ -32,12 +32,12 @@ test("server-renders the complete portfolio", async () => {
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="id"/i);
-  assert.match(html, /Nama Anda — Web Developer Portfolio/);
-  assert.match(html, /Tentang Saya/);
-  assert.match(html, /Yang Saya Kerjakan/);
-  assert.match(html, /Ruang Kerja/);
-  assert.match(html, /Saku Tumbuh/);
-  assert.match(html, /Arah Kota/);
+  assert.match(html, /Setyo Agung Prabowo — IT Support &amp; Data Management/);
+  assert.match(html, /About Me/);
+  assert.match(html, /What I Do/);
+  assert.match(html, /IT Helpdesk &amp; Manajemen Aset/);
+  assert.match(html, /Web Katalog Buku/);
+  assert.match(html, /Tracking Barang &amp; Kontainer/);
   assert.match(html, /hello@domainanda\.com/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });
