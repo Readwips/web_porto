@@ -106,7 +106,6 @@ export default function Home() {
             <a href="#top">Beranda</a>
             <a href="#proyek">Karya</a>
             <a href="#tentang">Tentang</a>
-            <a href="#kontak">Kontak</a>
           </nav>
 
           <div className="nav-tools">
@@ -365,23 +364,6 @@ export default function Home() {
             </div>
           </section>
 
-          <blockquote>
-            “Produk yang baik membuat hal rumit terasa biasa.”
-          </blockquote>
-
-          <section className="contact-card" id="kontak">
-            <div>
-              <span>TERBUKA UNTUK KOLABORASI</span>
-              <h2>Punya ide yang ingin diwujudkan?</h2>
-              <p>
-                Ceritakan tujuan, kebutuhan, dan waktu proyek Anda. Mari lihat
-                bagaimana saya dapat membantu.
-              </p>
-            </div>
-            <a href="mailto:hello@domainanda.com">
-              Kirim email <span aria-hidden="true">↗</span>
-            </a>
-          </section>
         </article>
       </div>
 
