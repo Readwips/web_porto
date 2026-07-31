@@ -149,39 +149,37 @@ export default function Home() {
         <span style={{ transform: `scaleX(${scrollProgress})` }} />
       </div>
       <header className="topbar">
-        <div className="nav-shell">
-          <nav aria-label="Navigasi utama">
-            <a
-              className={activeSection === "top" ? "active" : ""}
-              href="#top"
-              aria-current={activeSection === "top" ? "page" : undefined}
-            >
-              Beranda
-            </a>
-            <a
-              className={activeSection === "proyek" ? "active" : ""}
-              href="#proyek"
-              aria-current={activeSection === "proyek" ? "page" : undefined}
-            >
-              Karya
-            </a>
-            <a
-              className={
-                ["tentang", "pekerjaan", "belajar"].includes(activeSection)
-                  ? "active"
-                  : ""
-              }
-              href="#tentang"
-              aria-current={
-                ["tentang", "pekerjaan", "belajar"].includes(activeSection)
-                  ? "page"
-                  : undefined
-              }
-            >
-              Tentang
-            </a>
-          </nav>
-        </div>
+        <nav className="nav-menu" aria-label="Navigasi utama">
+          <a
+            className={activeSection === "top" ? "active" : ""}
+            href="#top"
+            aria-current={activeSection === "top" ? "page" : undefined}
+          >
+            Beranda
+          </a>
+          <a
+            className={activeSection === "proyek" ? "active" : ""}
+            href="#proyek"
+            aria-current={activeSection === "proyek" ? "page" : undefined}
+          >
+            Karya
+          </a>
+          <a
+            className={
+              ["tentang", "pekerjaan", "belajar"].includes(activeSection)
+                ? "active"
+                : ""
+            }
+            href="#tentang"
+            aria-current={
+              ["tentang", "pekerjaan", "belajar"].includes(activeSection)
+                ? "page"
+                : undefined
+            }
+          >
+            Tentang
+          </a>
+        </nav>
       </header>
 
       <section className="banner" id="top" aria-label="Sampul portofolio">

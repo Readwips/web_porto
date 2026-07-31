@@ -84,44 +84,46 @@ a {
   position: sticky;
   top: 0;
   z-index: 50;
-  border-bottom: 1px solid var(--border);
-  background: var(--header);
-  backdrop-filter: blur(18px);
-}
-
-.nav-shell {
   display: flex;
-  width: min(1180px, calc(100% - 40px));
-  min-height: 76px;
-  align-items: center;
   justify-content: center;
-  margin-inline: auto;
+  padding: 12px 16px;
+  background: transparent;
+  pointer-events: none;
 }
 
-.nav-shell nav {
+.nav-menu {
   display: flex;
+  width: fit-content;
   align-items: center;
   justify-content: center;
   gap: clamp(34px, 6vw, 54px);
+  margin: 0 auto;
+  padding: 4px 28px 3px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #080b10;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
   color: var(--muted);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1rem;
+  pointer-events: auto;
+  backdrop-filter: blur(18px);
 }
 
-.nav-shell nav a {
+.nav-menu a {
   position: relative;
   min-width: 68px;
-  padding: 27px 0 22px;
+  padding: 16px 0 15px;
   text-align: center;
   transition:
     color 160ms ease,
     transform 160ms ease;
 }
 
-.nav-shell nav a::after {
+.nav-menu a::after {
   position: absolute;
   right: 0;
-  bottom: 7px;
+  bottom: 3px;
   left: 0;
   height: 3px;
   content: "";
@@ -132,22 +134,22 @@ a {
   transition: transform 180ms ease;
 }
 
-.nav-shell nav a:hover {
+.nav-menu a:hover {
   color: var(--text);
   transform: translateY(-1px);
 }
 
-.nav-shell nav a:hover::after {
+.nav-menu a:hover::after {
   transform: scaleX(0.35);
 }
 
-.nav-shell nav a.active,
-.nav-shell nav a[aria-current="page"] {
+.nav-menu a.active,
+.nav-menu a[aria-current="page"] {
   color: var(--accent);
 }
 
-.nav-shell nav a.active::after,
-.nav-shell nav a[aria-current="page"]::after {
+.nav-menu a.active::after,
+.nav-menu a[aria-current="page"]::after {
   transform: scaleX(1);
 }
 
@@ -816,24 +818,24 @@ a {
 }
 
 @media (max-width: 720px) {
-  .nav-shell,
   .content-shell,
   .footer {
     width: min(100% - 28px, 1180px);
   }
 
-  .nav-shell {
-    min-height: 64px;
+  .topbar {
+    padding: 8px 12px;
   }
 
-  .nav-shell nav {
+  .nav-menu {
     gap: 28px;
+    padding: 3px 16px 2px;
     font-size: 0.92rem;
   }
 
-  .nav-shell nav a {
+  .nav-menu a {
     min-width: 60px;
-    padding: 21px 0 18px;
+    padding: 15px 0 14px;
   }
 
   .banner {
