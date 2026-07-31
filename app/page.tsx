@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { FaFacebookF, FaGithub, FaInstagram } from "react-icons/fa";
 
 const projects = [
   {
@@ -222,7 +223,7 @@ export default function Home() {
                 aria-label="Facebook Setyo Agung Prabowo"
                 title="Facebook"
               >
-                FB
+                <FaFacebookF aria-hidden="true" />
               </a>
               <a
                 href="https://www.instagram.com/readwips/"
@@ -231,7 +232,7 @@ export default function Home() {
                 aria-label="Instagram Setyo Agung Prabowo"
                 title="Instagram"
               >
-                IG
+                <FaInstagram aria-hidden="true" />
               </a>
               <a
                 href="https://github.com/Readwips"
@@ -240,7 +241,7 @@ export default function Home() {
                 aria-label="GitHub Setyo Agung Prabowo"
                 title="GitHub"
               >
-                GH
+                <FaGithub aria-hidden="true" />
               </a>
             </div>
           </section>
