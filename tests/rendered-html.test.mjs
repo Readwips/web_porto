@@ -71,8 +71,9 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /aria-current=/);
   assert.doesNotMatch(page, /portfolio-theme|searchOpen|theme-toggle/);
   assert.match(page, /IntersectionObserver/);
-  assert.match(page, /showNavbar/);
-  assert.match(page, /window\.scrollY <= 24/);
+  assert.match(page, /navbarVisibility/);
+  assert.match(page, /1 - window\.scrollY \/ 160/);
+  assert.match(page, /translate3d/);
   assert.match(page, /aria-expanded=\{isOpen\}/);
   assert.match(page, /selectedTechnology/);
   assert.match(page, /reading-progress/);
@@ -100,7 +101,8 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(topbarRule, /background:\s*transparent/);
   assert.match(topbarRule, /position:\s*fixed/);
   assert.match(topbarRule, /inset-inline:\s*0/);
-  assert.match(styles, /\.topbar-hidden\s*\{[^}]*opacity:\s*0/s);
+  assert.match(styles, /will-change:\s*opacity, transform/);
+  assert.match(styles, /\.topbar-hidden\s*\{[^}]*visibility:\s*hidden/s);
 
   await assert.rejects(
     access(
