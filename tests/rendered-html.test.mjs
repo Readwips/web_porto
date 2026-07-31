@@ -79,6 +79,12 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /prefers-reduced-motion:\s*reduce/);
   assert.match(page, /pointer:\s*fine/);
   assert.match(page, /event\.ctrlKey/);
+  assert.match(page, /navigateToSection/);
+  assert.match(page, /Math\.pow\(-2 \* progress \+ 2, 3\)/);
+  assert.match(page, /navigateToSection\(event, "top"\)/);
+  assert.match(page, /navigateToSection\(event, "proyek"\)/);
+  assert.match(page, /navigateToSection\(event, "tentang"\)/);
+  assert.match(page, /history\.pushState/);
   assert.match(page, /aria-expanded=\{isOpen\}/);
   assert.match(page, /selectedTechnology/);
   assert.match(page, /reading-progress/);
