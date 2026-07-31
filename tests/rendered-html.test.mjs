@@ -33,6 +33,10 @@ test("server-renders the complete portfolio", async () => {
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="id"/i);
   assert.match(html, /Setyo Agung Prabowo — IT Support &amp; Data Management/);
+  assert.match(html, /Ringkasan Portfolio/);
+  assert.match(html, /Terbuka untuk peluang kerja/);
+  assert.match(html, /IT Support/);
+  assert.match(html, /Data Management/);
   assert.match(html, /About Me/);
   assert.match(html, /What I Do/);
   assert.match(html, /IT Helpdesk &amp; Manajemen Aset/);
@@ -58,6 +62,10 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /IntersectionObserver/);
   assert.match(page, /aria-expanded=\{isOpen\}/);
   assert.match(page, /selectedTechnology/);
+  assert.match(page, /selectedFocus/);
+  assert.match(page, /projectFilter/);
+  assert.match(page, /role="tablist"/);
+  assert.match(page, /Filter proyek/);
   assert.match(page, /reading-progress/);
   assert.match(page, /back-to-top/);
   assert.match(layout, /generateMetadata/);
