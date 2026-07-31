@@ -42,6 +42,7 @@ test("server-renders the complete portfolio", async () => {
   assert.match(html, /Web Katalog Buku/);
   assert.match(html, /Tracking Barang &amp; Kontainer/);
   assert.match(html, /vivy\.jpg/);
+  assert.doesNotMatch(html, /banner-sun|banner-hill|banner-grid/);
   assert.match(html, /Avatar pixel art berambut biru/);
   assert.doesNotMatch(html, /Placeholder foto profil/);
   assert.match(html, /https:\/\/www\.facebook\.com\/loempers/);
@@ -72,6 +73,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(layout, /generateMetadata/);
   assert.match(layout, /\/og\.png/);
   assert.match(styles, /\.nav-menu a\[aria-current="page"\]/);
+  assert.match(styles, /url\("\/vivy-background\.jpg"\)/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 
   const navMenuRule = styles.match(/\.nav-menu\s*\{([^}]*)\}/)?.[1] ?? "";
@@ -96,4 +98,5 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   );
   await assert.rejects(access(new URL("public/favicon.svg", templateRoot)));
   await access(new URL("public/vivy.jpg", templateRoot));
+  await access(new URL("public/vivy-background.jpg", templateRoot));
 });
