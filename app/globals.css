@@ -81,7 +81,7 @@ a {
 }
 
 .topbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   inset-inline: 0;
   z-index: 50;
@@ -90,6 +90,17 @@ a {
   padding: 24px 16px 12px;
   background: transparent;
   pointer-events: none;
+  transition:
+    opacity 280ms ease,
+    transform 280ms ease,
+    visibility 0s linear;
+}
+
+.topbar-hidden {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-14px);
+  transition-delay: 0s, 0s, 280ms;
 }
 
 .nav-menu {

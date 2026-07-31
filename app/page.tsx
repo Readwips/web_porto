@@ -97,6 +97,7 @@ const technologies = [
 export default function Home() {
   const [activeSection, setActiveSection] = useState("top");
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showNavbar, setShowNavbar] = useState(true);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(0);
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
@@ -108,6 +109,7 @@ export default function Home() {
       const progress =
         scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
       setScrollProgress(Math.min(Math.max(progress, 0), 1));
+      setShowNavbar(window.scrollY <= 24);
       setShowBackToTop(window.scrollY > 520);
     };
 
@@ -150,7 +152,7 @@ export default function Home() {
       <div className="reading-progress" aria-hidden="true">
         <span style={{ transform: `scaleX(${scrollProgress})` }} />
       </div>
-      <header className="topbar">
+      <header className={`topbar ${showNavbar ? "" : "topbar-hidden"}`}>
         <nav className="nav-menu" aria-label="Navigasi utama">
           <a
             className={activeSection === "top" ? "active" : ""}
