@@ -64,6 +64,9 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /aria-label="Navigasi utama"/);
   assert.match(page, /className="nav-menu"/);
   assert.match(page, /className="banner-image"/);
+  assert.match(page, /FaFacebookF/);
+  assert.match(page, /FaInstagram/);
+  assert.match(page, /FaGithub/);
   assert.match(page, /src="\/vivy-background\.jpg"/);
   assert.match(page, /aria-current=/);
   assert.doesNotMatch(page, /portfolio-theme|searchOpen|theme-toggle/);
@@ -77,6 +80,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(styles, /\.nav-menu a\[aria-current="page"\]/);
   assert.match(styles, /\.banner-image\s*\{[^}]*object-fit:\s*cover/s);
   assert.match(styles, /\.banner-image\s*\{[^}]*object-position:\s*center 56%/s);
+  assert.match(styles, /\.social-row svg\s*\{[^}]*width:\s*13px/s);
   assert.doesNotMatch(styles, /\.banner::(?:before|after)/);
   assert.doesNotMatch(styles, /filter:\s*brightness/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
