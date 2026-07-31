@@ -184,12 +184,7 @@ export default function Home() {
       </header>
 
       <section className="banner" id="top" aria-label="Sampul portofolio">
-        <div className="banner-scene" aria-hidden="true">
-          <span className="banner-sun" />
-          <span className="banner-hill hill-one" />
-          <span className="banner-hill hill-two" />
-          <span className="banner-grid" />
-        </div>
+        <div className="banner-scene" aria-hidden="true" />
       </section>
 
       <div className="content-shell">
