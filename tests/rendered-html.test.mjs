@@ -63,6 +63,8 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
 
   assert.match(page, /aria-label="Navigasi utama"/);
   assert.match(page, /className="nav-menu"/);
+  assert.match(page, /className="banner-image"/);
+  assert.match(page, /src="\/vivy-background\.jpg"/);
   assert.match(page, /aria-current=/);
   assert.doesNotMatch(page, /portfolio-theme|searchOpen|theme-toggle/);
   assert.match(page, /IntersectionObserver/);
@@ -73,7 +75,9 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(layout, /generateMetadata/);
   assert.match(layout, /\/og\.png/);
   assert.match(styles, /\.nav-menu a\[aria-current="page"\]/);
-  assert.match(styles, /url\("\/vivy-background\.jpg"\)/);
+  assert.match(styles, /\.banner-image\s*\{[^}]*object-fit:\s*contain/s);
+  assert.doesNotMatch(styles, /\.banner::(?:before|after)/);
+  assert.doesNotMatch(styles, /filter:\s*brightness/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 
   const navMenuRule = styles.match(/\.nav-menu\s*\{([^}]*)\}/)?.[1] ?? "";
