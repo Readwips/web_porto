@@ -58,6 +58,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   ]);
 
   assert.match(page, /aria-label="Navigasi utama"/);
+  assert.match(page, /className="nav-menu"/);
   assert.match(page, /aria-current=/);
   assert.doesNotMatch(page, /portfolio-theme|searchOpen|theme-toggle/);
   assert.match(page, /IntersectionObserver/);
@@ -67,9 +68,20 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /back-to-top/);
   assert.match(layout, /generateMetadata/);
   assert.match(layout, /\/og\.png/);
-  assert.match(styles, /\.nav-shell nav a\[aria-current="page"\]/);
-  assert.doesNotMatch(styles, /\.nav-shell nav\s*\{\s*display:\s*none/);
+  assert.match(styles, /\.nav-menu a\[aria-current="page"\]/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
+
+  const navMenuRule = styles.match(/\.nav-menu\s*\{([^}]*)\}/)?.[1] ?? "";
+  const topbarRule = styles.match(/\.topbar\s*\{([^}]*)\}/)?.[1] ?? "";
+  assert.match(navMenuRule, /width:\s*fit-content/);
+  assert.match(navMenuRule, /margin:\s*0 auto/);
+  assert.match(navMenuRule, /border-radius:\s*14px/);
+  assert.match(navMenuRule, /background:\s*#080b10/);
+  assert.doesNotMatch(
+    navMenuRule,
+    /width:\s*(?:100%|100vw)|(?:left|right):\s*0/,
+  );
+  assert.match(topbarRule, /background:\s*transparent/);
 
   await assert.rejects(
     access(
