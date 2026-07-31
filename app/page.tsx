@@ -143,6 +143,76 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    const finePointer = window.matchMedia("(pointer: fine)");
+
+    if (reducedMotion.matches || !finePointer.matches) return;
+
+    let targetScroll = window.scrollY;
+    let frameId = 0;
+
+    const animateScroll = () => {
+      const distance = targetScroll - window.scrollY;
+
+      if (Math.abs(distance) < 0.5) {
+        window.scrollTo(0, targetScroll);
+        frameId = 0;
+        return;
+      }
+
+      window.scrollTo(0, window.scrollY + distance * 0.12);
+      frameId = window.requestAnimationFrame(animateScroll);
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      if (
+        event.ctrlKey ||
+        event.deltaY === 0 ||
+        Math.abs(event.deltaY) < Math.abs(event.deltaX)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      const deltaScale =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 18
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerHeight
+            : 1;
+      const maxScroll = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        0,
+      );
+
+      targetScroll = Math.min(
+        Math.max(targetScroll + event.deltaY * deltaScale * 0.9, 0),
+        maxScroll,
+      );
+
+      if (!frameId) {
+        frameId = window.requestAnimationFrame(animateScroll);
+      }
+    };
+
+    const syncTarget = () => {
+      if (!frameId) targetScroll = window.scrollY;
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("scroll", syncTarget, { passive: true });
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("scroll", syncTarget);
+      if (frameId) window.cancelAnimationFrame(frameId);
+    };
+  }, []);
+
   const selectedTechnologyData =
     technologies.find((technology) => technology.name === selectedTechnology) ??
     technologies[0];
