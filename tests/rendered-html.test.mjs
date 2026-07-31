@@ -4,13 +4,13 @@ import test from "node:test";
 
 const templateRoot = new URL("../", import.meta.url);
 
-async function render() {
+async function render(path = "/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", {
+    new Request(`http://localhost${path}`, {
       headers: { accept: "text/html" },
     }),
     {
@@ -53,42 +53,71 @@ test("server-renders the complete portfolio", async () => {
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });
 
+test("renders Karya and Tentang as focused pages", async () => {
+  const [worksResponse, aboutResponse] = await Promise.all([
+    render("/karya"),
+    render("/tentang"),
+  ]);
+
+  assert.equal(worksResponse.status, 200);
+  assert.equal(aboutResponse.status, 200);
+
+  const [worksHtml, aboutHtml] = await Promise.all([
+    worksResponse.text(),
+    aboutResponse.text(),
+  ]);
+
+  assert.match(worksHtml, /Latest Works/);
+  assert.match(worksHtml, /IT Helpdesk &amp; Manajemen Aset/);
+  assert.doesNotMatch(worksHtml, /About Me|What I Do|Currently Learning/);
+
+  assert.match(aboutHtml, /About Me/);
+  assert.match(aboutHtml, /What I Do/);
+  assert.match(aboutHtml, /Currently Learning/);
+  assert.doesNotMatch(aboutHtml, /Latest Works|Web Katalog Buku/);
+});
+
 test("keeps portfolio metadata and starter cleanup in place", async () => {
-  const [page, layout, packageJson, styles] = await Promise.all([
+  const [page, portfolio, worksPage, aboutPage, layout, packageJson, styles] =
+    await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/portfolio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/karya/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/tentang/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
-  ]);
+    ]);
 
-  assert.match(page, /aria-label="Navigasi utama"/);
-  assert.match(page, /className="nav-menu"/);
-  assert.match(page, /className="banner-image"/);
-  assert.match(page, /FaFacebookF/);
-  assert.match(page, /FaInstagram/);
-  assert.match(page, /FaGithub/);
-  assert.match(page, /src="\/vivy-background\.jpg"/);
-  assert.match(page, /aria-current=/);
-  assert.doesNotMatch(page, /portfolio-theme|searchOpen|theme-toggle/);
-  assert.match(page, /IntersectionObserver/);
-  assert.match(page, /navbarVisibility/);
-  assert.match(page, /1 - window\.scrollY \/ 160/);
-  assert.match(page, /translate3d/);
-  assert.match(page, /requestAnimationFrame/);
-  assert.match(page, /passive:\s*false/);
-  assert.match(page, /prefers-reduced-motion:\s*reduce/);
-  assert.match(page, /pointer:\s*fine/);
-  assert.match(page, /event\.ctrlKey/);
-  assert.match(page, /navigateToSection/);
-  assert.match(page, /Math\.pow\(-2 \* progress \+ 2, 3\)/);
-  assert.match(page, /navigateToSection\(event, "top"\)/);
-  assert.match(page, /navigateToSection\(event, "proyek"\)/);
-  assert.match(page, /navigateToSection\(event, "tentang"\)/);
-  assert.match(page, /history\.pushState/);
-  assert.match(page, /aria-expanded=\{isOpen\}/);
-  assert.match(page, /selectedTechnology/);
-  assert.match(page, /reading-progress/);
-  assert.match(page, /back-to-top/);
+  assert.match(page, /Portfolio view="home"/);
+  assert.match(worksPage, /Portfolio view="works"/);
+  assert.match(aboutPage, /Portfolio view="about"/);
+  assert.match(portfolio, /aria-label="Navigasi utama"/);
+  assert.match(portfolio, /className="nav-menu"/);
+  assert.match(portfolio, /href="\/karya"/);
+  assert.match(portfolio, /href="\/tentang"/);
+  assert.match(portfolio, /scroll=\{true\}/);
+  assert.match(portfolio, /view !== "works"/);
+  assert.match(portfolio, /view !== "about"/);
+  assert.match(portfolio, /className="banner-image"/);
+  assert.match(portfolio, /FaFacebookF/);
+  assert.match(portfolio, /FaInstagram/);
+  assert.match(portfolio, /FaGithub/);
+  assert.match(portfolio, /src="\/vivy-background\.jpg"/);
+  assert.match(portfolio, /aria-current=/);
+  assert.doesNotMatch(portfolio, /portfolio-theme|searchOpen|theme-toggle/);
+  assert.match(portfolio, /navbarVisibility/);
+  assert.match(portfolio, /1 - window\.scrollY \/ 160/);
+  assert.match(portfolio, /translate3d/);
+  assert.match(portfolio, /requestAnimationFrame/);
+  assert.match(portfolio, /passive:\s*false/);
+  assert.match(portfolio, /prefers-reduced-motion:\s*reduce/);
+  assert.match(portfolio, /pointer:\s*fine/);
+  assert.match(portfolio, /event\.ctrlKey/);
+  assert.match(portfolio, /aria-expanded=\{isOpen\}/);
+  assert.match(portfolio, /selectedTechnology/);
+  assert.match(portfolio, /reading-progress/);
+  assert.match(portfolio, /back-to-top/);
   assert.match(layout, /generateMetadata/);
   assert.match(layout, /\/og\.png/);
   assert.match(styles, /\.nav-menu a\[aria-current="page"\]/);
@@ -114,6 +143,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(topbarRule, /inset-inline:\s*0/);
   assert.match(styles, /will-change:\s*opacity, transform/);
   assert.match(styles, /\.topbar-hidden\s*\{[^}]*visibility:\s*hidden/s);
+  assert.match(styles, /\.view-enter\s*\{[^}]*animation:\s*view-enter/s);
 
   await assert.rejects(
     access(
