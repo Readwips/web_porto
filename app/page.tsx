@@ -1,29 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-
-const searchItems = [
-  {
-    label: "About Me",
-    description: "Latar belakang dan fokus karier saya.",
-    href: "#tentang",
-  },
-  {
-    label: "What I Do",
-    description: "Aktivitas dan kemampuan yang sedang saya kembangkan.",
-    href: "#pekerjaan",
-  },
-  {
-    label: "Latest Works",
-    description: "Proyek terbaru yang tersedia di GitHub.",
-    href: "#proyek",
-  },
-  {
-    label: "Currently Learning",
-    description: "Keahlian yang sedang saya perdalam.",
-    href: "#belajar",
-  },
-];
+import { useEffect, useState } from "react";
 
 const projects = [
   {
@@ -116,27 +93,11 @@ const technologies = [
 ];
 
 export default function Home() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [query, setQuery] = useState("");
-  const [searchOpen, setSearchOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(0);
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
-
-  useEffect(() => {
-    const savedTheme = window.localStorage.getItem("portfolio-theme");
-    const preferredTheme =
-      savedTheme === "dark" || savedTheme === "light"
-        ? savedTheme
-        : window.matchMedia("(prefers-color-scheme: light)").matches
-          ? "light"
-          : "dark";
-    const frame = window.requestAnimationFrame(() => setTheme(preferredTheme));
-
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
 
   useEffect(() => {
     const updateScrollState = () => {
@@ -178,53 +139,29 @@ export default function Home() {
     };
   }, []);
 
-  const results = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-    if (!normalizedQuery) return searchItems;
-
-    return searchItems.filter((item) =>
-      `${item.label} ${item.description}`
-        .toLowerCase()
-        .includes(normalizedQuery),
-    );
-  }, [query]);
-
-  const toggleTheme = () => {
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-    window.localStorage.setItem("portfolio-theme", nextTheme);
-  };
-
-  const closeSearch = () => {
-    setSearchOpen(false);
-    setQuery("");
-  };
-
   const selectedTechnologyData =
     technologies.find((technology) => technology.name === selectedTechnology) ??
     technologies[0];
 
   return (
-    <main className="portfolio" data-theme={theme}>
+    <main className="portfolio">
       <div className="reading-progress" aria-hidden="true">
         <span style={{ transform: `scaleX(${scrollProgress})` }} />
       </div>
       <header className="topbar">
         <div className="nav-shell">
-          <a className="brand" href="#top" aria-label="Kembali ke atas">
-            <span className="brand-icon" aria-hidden="true">
-              ⌂
-            </span>
-            <strong>Setyo Agung</strong>
-          </a>
-
           <nav aria-label="Navigasi utama">
-            <a className={activeSection === "top" ? "active" : ""} href="#top">
+            <a
+              className={activeSection === "top" ? "active" : ""}
+              href="#top"
+              aria-current={activeSection === "top" ? "page" : undefined}
+            >
               Beranda
             </a>
             <a
               className={activeSection === "proyek" ? "active" : ""}
               href="#proyek"
+              aria-current={activeSection === "proyek" ? "page" : undefined}
             >
               Karya
             </a>
@@ -235,58 +172,15 @@ export default function Home() {
                   : ""
               }
               href="#tentang"
+              aria-current={
+                ["tentang", "pekerjaan", "belajar"].includes(activeSection)
+                  ? "page"
+                  : undefined
+              }
             >
               Tentang
             </a>
           </nav>
-
-          <div className="nav-tools">
-            <div className="search">
-              <span className="search-icon" aria-hidden="true">
-                ⌕
-              </span>
-              <input
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                onFocus={() => setSearchOpen(true)}
-                placeholder="Cari"
-                aria-label="Cari bagian portofolio"
-              />
-              {searchOpen && (
-                <div className="search-results">
-                  <div className="search-result-head">
-                    <span>LOMPAT KE BAGIAN</span>
-                    <button type="button" onClick={closeSearch}>
-                      Tutup
-                    </button>
-                  </div>
-                  {results.length > 0 ? (
-                    results.map((item) => (
-                      <a href={item.href} key={item.href} onClick={closeSearch}>
-                        <strong>{item.label}</strong>
-                        <span>{item.description}</span>
-                      </a>
-                    ))
-                  ) : (
-                    <p>Tidak ada bagian yang cocok.</p>
-                  )}
-                </div>
-              )}
-            </div>
-            <button
-              className="theme-toggle"
-              type="button"
-              onClick={toggleTheme}
-              aria-label={
-                theme === "dark" ? "Gunakan tema terang" : "Gunakan tema gelap"
-              }
-              aria-pressed={theme === "light"}
-              title={theme === "dark" ? "Tema terang" : "Tema gelap"}
-            >
-              {theme === "dark" ? "☼" : "☾"}
-            </button>
-          </div>
         </div>
       </header>
 
