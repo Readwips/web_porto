@@ -33,6 +33,9 @@ test("server-renders the complete portfolio", async () => {
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="id"/i);
   assert.match(html, /Setyo Agung Prabowo — IT Support &amp; Data Management/);
+  assert.match(html, />Beranda</);
+  assert.match(html, />Karya</);
+  assert.match(html, />Tentang</);
   assert.match(html, /About Me/);
   assert.match(html, /What I Do/);
   assert.match(html, /IT Helpdesk &amp; Manajemen Aset/);
@@ -41,20 +44,22 @@ test("server-renders the complete portfolio", async () => {
   assert.match(html, /https:\/\/www\.facebook\.com\/loempers/);
   assert.match(html, /https:\/\/www\.instagram\.com\/readwips\//);
   assert.match(html, /https:\/\/github\.com\/Readwips/);
+  assert.doesNotMatch(html, /Cari bagian portofolio|Gunakan tema/);
   assert.doesNotMatch(html, /hello@domainanda\.com/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });
 
 test("keeps portfolio metadata and starter cleanup in place", async () => {
-  const [page, layout, packageJson] = await Promise.all([
+  const [page, layout, packageJson, styles] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /portfolio-theme/);
   assert.match(page, /aria-label="Navigasi utama"/);
-  assert.match(page, /prefers-color-scheme: light/);
+  assert.match(page, /aria-current=/);
+  assert.doesNotMatch(page, /portfolio-theme|searchOpen|theme-toggle/);
   assert.match(page, /IntersectionObserver/);
   assert.match(page, /aria-expanded=\{isOpen\}/);
   assert.match(page, /selectedTechnology/);
@@ -62,6 +67,8 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /back-to-top/);
   assert.match(layout, /generateMetadata/);
   assert.match(layout, /\/og\.png/);
+  assert.match(styles, /\.nav-shell nav a\[aria-current="page"\]/);
+  assert.doesNotMatch(styles, /\.nav-shell nav\s*\{\s*display:\s*none/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 
   await assert.rejects(
