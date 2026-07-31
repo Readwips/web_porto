@@ -184,7 +184,15 @@ export default function Home() {
       </header>
 
       <section className="banner" id="top" aria-label="Sampul portofolio">
-        <div className="banner-scene" aria-hidden="true" />
+        <Image
+          className="banner-image"
+          src="/vivy-background.jpg"
+          alt="Ilustrasi pegunungan hijau di atas hamparan awan"
+          width={1240}
+          height={2048}
+          sizes="100vw"
+          priority
+        />
       </section>
 
       <div className="content-shell">
