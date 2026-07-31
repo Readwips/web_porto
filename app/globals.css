@@ -155,19 +155,17 @@ a {
 
 .banner {
   position: relative;
-  display: grid;
-  place-items: center;
+  height: clamp(245px, 25vw, 320px);
   overflow: hidden;
-  background: #b9e4f7;
+  background: #0d1117;
 }
 
 .banner-image {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: min(72vh, 760px);
-  object-fit: contain;
-  object-position: center;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 56%;
 }
 
 .content-shell {
@@ -178,7 +176,7 @@ a {
   grid-template-columns: 275px minmax(0, 1fr);
   gap: 24px;
   align-items: start;
-  margin: 24px auto 80px;
+  margin: -64px auto 80px;
 }
 
 .sidebar {
@@ -783,9 +781,13 @@ a {
     padding: 15px 0 14px;
   }
 
+  .banner {
+    height: 190px;
+  }
+
   .content-shell {
     grid-template-columns: 1fr;
-    margin-top: 18px;
+    margin-top: -42px;
   }
 
   .sidebar {
