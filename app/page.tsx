@@ -4,6 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 
 const searchItems = [
   {
+    label: "Dashboard",
+    description: "Ringkasan proyek, teknologi, dan fokus karier.",
+    href: "#dashboard",
+  },
+  {
     label: "About Me",
     description: "Latar belakang dan fokus karier saya.",
     href: "#tentang",
@@ -27,8 +32,10 @@ const searchItems = [
 
 const projects = [
   {
+    id: "helpdesk",
     name: "IT Helpdesk & Manajemen Aset",
     status: "Terbaru",
+    categories: ["IT Support", "Data"],
     description:
       "Aplikasi Laravel untuk mengelola workflow tiket dukungan IT, inventaris perangkat, penugasan aset, riwayat perbaikan, knowledge base, dashboard, dan laporan.",
     stack: "Laravel · MySQL · Tailwind CSS · Chart.js",
@@ -40,8 +47,10 @@ const projects = [
     ],
   },
   {
+    id: "katalog-buku",
     name: "Web Katalog Buku",
     status: "Project",
+    categories: ["Data", "Web"],
     description:
       "Aplikasi katalog yang membantu pengunjung mencari buku berdasarkan judul, penulis, ISBN, atau penerbit serta melihat stok dan lokasi rak.",
     stack: "Laravel · PHP · Blade · Database",
@@ -53,8 +62,10 @@ const projects = [
     ],
   },
   {
+    id: "tracking-barang",
     name: "Tracking Barang & Kontainer",
     status: "Project",
+    categories: ["Data", "API"],
     description:
       "Sistem tracking logistik untuk memantau barang dan kontainer dengan dukungan dashboard, REST API, serta visualisasi data operasional.",
     stack: "Laravel · MySQL · REST API · Chart.js",
@@ -63,6 +74,50 @@ const projects = [
       "Pencatatan dan pemantauan data barang serta kontainer",
       "Integrasi data melalui REST API",
       "Dashboard dan visualisasi data operasional",
+    ],
+  },
+];
+
+const projectFilters = ["Semua", "IT Support", "Data", "Web", "API"];
+
+const focusAreas = [
+  {
+    id: "support",
+    label: "IT Support",
+    number: "01",
+    title: "Dukungan teknis yang terstruktur",
+    description:
+      "Berfokus membantu pengguna, menelusuri masalah, dan mendokumentasikan solusi agar kendala serupa lebih cepat diselesaikan.",
+    activities: [
+      "Troubleshooting perangkat dan aplikasi",
+      "Pengelolaan tiket serta dokumentasi solusi",
+      "Inventaris dan pemeliharaan aset TI",
+    ],
+  },
+  {
+    id: "data",
+    label: "Data Management",
+    number: "02",
+    title: "Data yang rapi dan mudah digunakan",
+    description:
+      "Mengelola data operasional agar konsisten, mudah dicari, dan dapat diolah menjadi laporan yang membantu pengambilan keputusan.",
+    activities: [
+      "Perancangan database relasional",
+      "Validasi, pencatatan, dan perapian data",
+      "Dashboard serta laporan operasional",
+    ],
+  },
+  {
+    id: "development",
+    label: "Development",
+    number: "03",
+    title: "Aplikasi internal yang praktis",
+    description:
+      "Membangun alat bantu berbasis web untuk menyederhanakan alur kerja IT Support dan pengelolaan data.",
+    activities: [
+      "Aplikasi internal dengan Laravel",
+      "Integrasi REST API dan Google Sheets",
+      "Version control menggunakan GitHub",
     ],
   },
 ];
@@ -122,8 +177,10 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("top");
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [openProject, setOpenProject] = useState<number | null>(0);
+  const [openProject, setOpenProject] = useState<string | null>("helpdesk");
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
+  const [selectedFocus, setSelectedFocus] = useState("support");
+  const [projectFilter, setProjectFilter] = useState("Semua");
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("portfolio-theme");
@@ -164,10 +221,12 @@ export default function Home() {
       },
     );
 
-    ["top", "tentang", "pekerjaan", "proyek", "belajar"].forEach((id) => {
-      const section = document.getElementById(id);
-      if (section) sectionObserver.observe(section);
-    });
+    ["top", "dashboard", "tentang", "pekerjaan", "proyek", "belajar"].forEach(
+      (id) => {
+        const section = document.getElementById(id);
+        if (section) sectionObserver.observe(section);
+      },
+    );
 
     updateScrollState();
     window.addEventListener("scroll", updateScrollState, { passive: true });
@@ -203,6 +262,21 @@ export default function Home() {
   const selectedTechnologyData =
     technologies.find((technology) => technology.name === selectedTechnology) ??
     technologies[0];
+  const selectedFocusData =
+    focusAreas.find((focus) => focus.id === selectedFocus) ?? focusAreas[0];
+  const filteredProjects = projects.filter(
+    (project) =>
+      projectFilter === "Semua" || project.categories.includes(projectFilter),
+  );
+
+  const changeProjectFilter = (filter: string) => {
+    setProjectFilter(filter);
+    const firstMatchingProject = projects.find(
+      (project) =>
+        filter === "Semua" || project.categories.includes(filter),
+    );
+    setOpenProject(firstMatchingProject?.id ?? null);
+  };
 
   return (
     <main className="portfolio" data-theme={theme}>
@@ -219,8 +293,13 @@ export default function Home() {
           </a>
 
           <nav aria-label="Navigasi utama">
-            <a className={activeSection === "top" ? "active" : ""} href="#top">
-              Beranda
+            <a
+              className={
+                ["top", "dashboard"].includes(activeSection) ? "active" : ""
+              }
+              href="#dashboard"
+            >
+              Dashboard
             </a>
             <a
               className={activeSection === "proyek" ? "active" : ""}
@@ -361,7 +440,7 @@ export default function Home() {
             </ul>
           </section>
 
-          <section className="side-widget">
+          <section className="side-widget" id="teknologi">
             <h2>Teknologi</h2>
             <div className="tag-cloud">
               {technologies.map((technology) => (
@@ -386,6 +465,79 @@ export default function Home() {
         </aside>
 
         <article className="article-card">
+          <section
+            className="dashboard-overview"
+            id="dashboard"
+            aria-labelledby="dashboard-title"
+          >
+            <div className="dashboard-header">
+              <div>
+                <span className="article-kicker">DASHBOARD / OVERVIEW</span>
+                <h2 id="dashboard-title">Ringkasan Portfolio</h2>
+              </div>
+              <span className="availability-status">
+                <i aria-hidden="true" />
+                Terbuka untuk peluang kerja
+              </span>
+            </div>
+
+            <div className="dashboard-stats">
+              <a className="stat-card" href="#proyek">
+                <span>Proyek publik</span>
+                <strong>{projects.length}</strong>
+                <small>Lihat karya <b aria-hidden="true">↓</b></small>
+              </a>
+              <a className="stat-card" href="#teknologi">
+                <span>Teknologi</span>
+                <strong>{technologies.length}</strong>
+                <small>Jelajahi kemampuan <b aria-hidden="true">←</b></small>
+              </a>
+              <a className="stat-card" href="#belajar">
+                <span>Fokus karier</span>
+                <strong>{focusAreas.length}</strong>
+                <small>Lihat pembelajaran <b aria-hidden="true">↓</b></small>
+              </a>
+            </div>
+
+            <div className="focus-dashboard">
+              <div className="focus-tabs" role="tablist" aria-label="Fokus kerja">
+                {focusAreas.map((focus) => (
+                  <button
+                    className={selectedFocus === focus.id ? "active" : ""}
+                    key={focus.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={selectedFocus === focus.id}
+                    aria-controls="focus-panel"
+                    onClick={() => setSelectedFocus(focus.id)}
+                  >
+                    <span>{focus.number}</span>
+                    {focus.label}
+                  </button>
+                ))}
+              </div>
+              <div
+                className="focus-panel"
+                id="focus-panel"
+                role="tabpanel"
+                aria-live="polite"
+              >
+                <div>
+                  <span className="focus-panel-label">FOKUS AKTIF</span>
+                  <h3>{selectedFocusData.title}</h3>
+                  <p>{selectedFocusData.description}</p>
+                </div>
+                <ul>
+                  {selectedFocusData.activities.map((activity) => (
+                    <li key={activity}>{activity}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <hr />
+
           <div className="article-heading" id="tentang">
             <span className="article-kicker">PROFIL / 2026</span>
             <h2>About Me</h2>
@@ -438,9 +590,30 @@ export default function Home() {
               </h2>
               <span className="small-note">GITHUB PROJECTS</span>
             </div>
-            <div className="project-list">
-              {projects.map((project, index) => {
-                const isOpen = openProject === index;
+            <div className="project-toolbar">
+              <div className="project-filters" aria-label="Filter proyek">
+                {projectFilters.map((filter) => (
+                  <button
+                    className={projectFilter === filter ? "active" : ""}
+                    key={filter}
+                    type="button"
+                    onClick={() => changeProjectFilter(filter)}
+                    aria-pressed={projectFilter === filter}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+              <span aria-live="polite">
+                {filteredProjects.length} dari {projects.length} proyek
+              </span>
+            </div>
+            <div className="project-list" aria-live="polite">
+              {filteredProjects.map((project) => {
+                const isOpen = openProject === project.id;
+                const projectNumber = projects.findIndex(
+                  (item) => item.id === project.id,
+                );
 
                 return (
                 <article
@@ -448,7 +621,7 @@ export default function Home() {
                   key={project.name}
                 >
                   <div className="project-number" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
+                    {String(projectNumber + 1).padStart(2, "0")}
                   </div>
                   <div>
                     <div className="project-title">
@@ -465,9 +638,11 @@ export default function Home() {
                         <span>{project.status}</span>
                         <button
                           type="button"
-                          onClick={() => setOpenProject(isOpen ? null : index)}
+                          onClick={() =>
+                            setOpenProject(isOpen ? null : project.id)
+                          }
                           aria-expanded={isOpen}
-                          aria-controls={`project-details-${index}`}
+                          aria-controls={`project-details-${project.id}`}
                         >
                           {isOpen ? "Tutup" : "Detail"}
                           <span aria-hidden="true">⌄</span>
@@ -478,7 +653,7 @@ export default function Home() {
                     <small>{project.stack}</small>
                     <div
                       className="project-details"
-                      id={`project-details-${index}`}
+                      id={`project-details-${project.id}`}
                       aria-hidden={!isOpen}
                     >
                       <div>
