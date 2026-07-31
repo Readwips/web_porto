@@ -75,7 +75,8 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(layout, /generateMetadata/);
   assert.match(layout, /\/og\.png/);
   assert.match(styles, /\.nav-menu a\[aria-current="page"\]/);
-  assert.match(styles, /\.banner-image\s*\{[^}]*object-fit:\s*contain/s);
+  assert.match(styles, /\.banner-image\s*\{[^}]*object-fit:\s*cover/s);
+  assert.match(styles, /\.banner-image\s*\{[^}]*object-position:\s*center 56%/s);
   assert.doesNotMatch(styles, /\.banner::(?:before|after)/);
   assert.doesNotMatch(styles, /filter:\s*brightness/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
