@@ -1,7 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import {
+  type MouseEvent as ReactMouseEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FaFacebookF, FaGithub, FaInstagram } from "react-icons/fa";
 
 const projects = [
@@ -101,6 +106,7 @@ export default function Home() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(0);
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
+  const navigationFrame = useRef<number | null>(null);
 
   useEffect(() => {
     const updateScrollState = () => {
@@ -213,6 +219,79 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(
+    () => () => {
+      if (navigationFrame.current) {
+        window.cancelAnimationFrame(navigationFrame.current);
+      }
+    },
+    [],
+  );
+
+  const navigateToSection = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    sectionId: string,
+  ) => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    event.preventDefault();
+
+    if (navigationFrame.current) {
+      window.cancelAnimationFrame(navigationFrame.current);
+    }
+
+    const startPosition = window.scrollY;
+    const destination =
+      sectionId === "top"
+        ? 0
+        : section.getBoundingClientRect().top + window.scrollY - 28;
+    const distance = destination - startPosition;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    window.history.pushState(null, "", `#${sectionId}`);
+
+    if (reducedMotion || Math.abs(distance) < 1) {
+      window.scrollTo(0, destination);
+      navigationFrame.current = null;
+      return;
+    }
+
+    const duration = Math.min(1100, Math.max(650, Math.abs(distance) * 0.35));
+    const startedAt = window.performance.now();
+
+    const animateNavigation = (currentTime: number) => {
+      const progress = Math.min((currentTime - startedAt) / duration, 1);
+      const easedProgress =
+        progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      window.scrollTo(0, startPosition + distance * easedProgress);
+
+      if (progress < 1) {
+        navigationFrame.current =
+          window.requestAnimationFrame(animateNavigation);
+      } else {
+        navigationFrame.current = null;
+      }
+    };
+
+    navigationFrame.current = window.requestAnimationFrame(animateNavigation);
+  };
+
   const selectedTechnologyData =
     technologies.find((technology) => technology.name === selectedTechnology) ??
     technologies[0];
@@ -233,6 +312,7 @@ export default function Home() {
           <a
             className={activeSection === "top" ? "active" : ""}
             href="#top"
+            onClick={(event) => navigateToSection(event, "top")}
             aria-current={activeSection === "top" ? "page" : undefined}
           >
             Beranda
@@ -240,6 +320,7 @@ export default function Home() {
           <a
             className={activeSection === "proyek" ? "active" : ""}
             href="#proyek"
+            onClick={(event) => navigateToSection(event, "proyek")}
             aria-current={activeSection === "proyek" ? "page" : undefined}
           >
             Karya
@@ -251,6 +332,7 @@ export default function Home() {
                 : ""
             }
             href="#tentang"
+            onClick={(event) => navigateToSection(event, "tentang")}
             aria-current={
               ["tentang", "pekerjaan", "belajar"].includes(activeSection)
                 ? "page"
