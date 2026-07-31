@@ -92,6 +92,8 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
     /width:\s*(?:100%|100vw)|(?:left|right):\s*0/,
   );
   assert.match(topbarRule, /background:\s*transparent/);
+  assert.match(topbarRule, /position:\s*absolute/);
+  assert.match(topbarRule, /inset-inline:\s*0/);
 
   await assert.rejects(
     access(
