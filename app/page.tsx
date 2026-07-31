@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const projects = [
@@ -194,8 +195,14 @@ export default function Home() {
       <div className="content-shell">
         <aside className="sidebar" aria-label="Profil dan keahlian">
           <section className="profile-card">
-            <div className="avatar" aria-label="Placeholder foto profil">
-              <span>SA</span>
+            <div className="avatar">
+              <Image
+                src="/vivy.jpg"
+                alt="Avatar pixel art berambut biru"
+                width={960}
+                height={960}
+                priority
+              />
             </div>
             <h1>Setyo Agung Prabowo</h1>
             <p className="profile-role">IT Support · Data Management</p>
