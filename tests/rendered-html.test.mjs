@@ -74,6 +74,11 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /navbarVisibility/);
   assert.match(page, /1 - window\.scrollY \/ 160/);
   assert.match(page, /translate3d/);
+  assert.match(page, /requestAnimationFrame/);
+  assert.match(page, /passive:\s*false/);
+  assert.match(page, /prefers-reduced-motion:\s*reduce/);
+  assert.match(page, /pointer:\s*fine/);
+  assert.match(page, /event\.ctrlKey/);
   assert.match(page, /aria-expanded=\{isOpen\}/);
   assert.match(page, /selectedTechnology/);
   assert.match(page, /reading-progress/);
