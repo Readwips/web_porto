@@ -100,7 +100,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /navigateToPage/);
   assert.match(portfolio, /router\.push\(href, \{ scroll: true \}\)/);
   assert.match(portfolio, /window\.setTimeout/);
-  assert.match(portfolio, /\}, 200\);/);
+  assert.match(portfolio, /\}, 350\);/);
   assert.match(portfolio, /page-panel-leaving/);
   assert.match(portfolio, /view !== "works"/);
   assert.match(portfolio, /view !== "about"/);
@@ -150,12 +150,13 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(styles, /\.topbar-hidden\s*\{[^}]*visibility:\s*hidden/s);
   assert.match(
     styles,
-    /\.view-enter\s*\{[^}]*animation:\s*view-enter 300ms ease 150ms forwards/s,
+    /\.view-enter\s*\{[^}]*animation:\s*view-enter 600ms ease 150ms forwards/s,
   );
   assert.match(
     styles,
     /\.page-panel-leaving\s*\{[^}]*transform:\s*translateY\(1rem\)/s,
   );
+  assert.match(styles, /opacity 350ms cubic-bezier\(0\.4, 0, 0\.2, 1\)/);
   assert.match(styles, /transform:\s*translateY\(2rem\)/);
 
   await assert.rejects(
