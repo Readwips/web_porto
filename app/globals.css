@@ -99,7 +99,7 @@ a {
 .view-enter {
   opacity: 0;
   will-change: opacity, transform;
-  animation: view-enter 300ms ease 150ms forwards;
+  animation: view-enter 600ms ease 150ms forwards;
 }
 
 .page-panel-leaving {
@@ -107,8 +107,8 @@ a {
   transform: translateY(1rem);
   will-change: opacity, transform;
   transition:
-    opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
-    transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    opacity 350ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes view-enter {

@@ -175,7 +175,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
     setLeavingView(view);
     navigationTimer.current = window.setTimeout(() => {
       router.push(href, { scroll: true });
-    }, 200);
+    }, 350);
   };
 
   useEffect(() => {
