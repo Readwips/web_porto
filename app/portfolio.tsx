@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  type MouseEvent as ReactMouseEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FaFacebookF, FaGithub, FaInstagram } from "react-icons/fa";
 
 const projects = [
@@ -98,11 +104,14 @@ const technologies = [
 export type PortfolioView = "home" | "works" | "about";
 
 export default function Portfolio({ view }: { view: PortfolioView }) {
+  const router = useRouter();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [navbarVisibility, setNavbarVisibility] = useState(1);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(0);
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
+  const [leavingView, setLeavingView] = useState<PortfolioView | null>(null);
+  const navigationTimer = useRef<number | null>(null);
 
   useEffect(() => {
     const updateScrollState = () => {
@@ -122,6 +131,52 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
       window.removeEventListener("scroll", updateScrollState);
     };
   }, []);
+
+  useEffect(
+    () => () => {
+      if (navigationTimer.current) {
+        window.clearTimeout(navigationTimer.current);
+      }
+    },
+    [],
+  );
+
+  const navigateToPage = (
+    event: ReactMouseEvent<HTMLAnchorElement>,
+    href: string,
+    targetView: PortfolioView,
+  ) => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (targetView === view) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (navigationTimer.current) {
+      window.clearTimeout(navigationTimer.current);
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      router.push(href, { scroll: true });
+      return;
+    }
+
+    setLeavingView(view);
+    navigationTimer.current = window.setTimeout(() => {
+      router.push(href, { scroll: true });
+    }, 200);
+  };
 
   useEffect(() => {
     const reducedMotion = window.matchMedia(
@@ -214,6 +269,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
             className={view === "home" ? "active" : ""}
             href="/"
             scroll={true}
+            onClick={(event) => navigateToPage(event, "/", "home")}
             aria-current={view === "home" ? "page" : undefined}
           >
             Beranda
@@ -222,6 +278,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
             className={view === "works" ? "active" : ""}
             href="/karya"
             scroll={true}
+            onClick={(event) => navigateToPage(event, "/karya", "works")}
             aria-current={view === "works" ? "page" : undefined}
           >
             Karya
@@ -230,6 +287,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
             className={view === "about" ? "active" : ""}
             href="/tentang"
             scroll={true}
+            onClick={(event) => navigateToPage(event, "/tentang", "about")}
             aria-current={view === "about" ? "page" : undefined}
           >
             Tentang
@@ -341,7 +399,12 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           </section>
         </aside>
 
-        <article className="article-card view-enter" key={view}>
+        <article
+          className={`article-card ${
+            leavingView === view ? "page-panel-leaving" : "view-enter"
+          }`}
+          key={view}
+        >
           {view !== "works" && (
             <>
           <div className="article-heading" id="tentang">
