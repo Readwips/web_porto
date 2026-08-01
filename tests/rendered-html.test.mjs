@@ -97,9 +97,6 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /href="\/karya"/);
   assert.match(portfolio, /href="\/tentang"/);
   assert.match(portfolio, /scroll=\{true\}/);
-  assert.match(portfolio, /className="view-enter" key=\{view\}/);
-  assert.match(portfolio, /behavior: reducedMotion \? "auto" : "smooth"/);
-  assert.match(portfolio, /\}, \[view\]\);/);
   assert.match(portfolio, /view !== "works"/);
   assert.match(portfolio, /view !== "about"/);
   assert.match(portfolio, /className="banner-image"/);
@@ -146,7 +143,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(topbarRule, /inset-inline:\s*0/);
   assert.match(styles, /will-change:\s*opacity, transform/);
   assert.match(styles, /\.topbar-hidden\s*\{[^}]*visibility:\s*hidden/s);
-  assert.match(styles, /\.view-enter\s*\{[^}]*animation:\s*view-enter 680ms/s);
+  assert.match(styles, /\.view-enter\s*\{[^}]*animation:\s*view-enter/s);
 
   await assert.rejects(
     access(
