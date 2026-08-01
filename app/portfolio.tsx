@@ -193,6 +193,18 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
     };
   }, []);
 
+  useEffect(() => {
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }, [view]);
+
   const selectedTechnologyData =
     technologies.find((technology) => technology.name === selectedTechnology) ??
     technologies[0];
@@ -237,6 +249,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
         </nav>
       </header>
 
+      <div className="view-enter" key={view}>
       <section className="banner" id="top" aria-label="Sampul portofolio">
         <Image
           className="banner-image"
@@ -341,7 +354,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           </section>
         </aside>
 
-        <article className="article-card view-enter" key={view}>
+        <article className="article-card">
           {view !== "works" && (
             <>
           <div className="article-heading" id="tentang">
@@ -506,6 +519,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           )}
 
         </article>
+      </div>
       </div>
 
       <button
