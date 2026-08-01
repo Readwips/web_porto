@@ -97,6 +97,11 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /href="\/karya"/);
   assert.match(portfolio, /href="\/tentang"/);
   assert.match(portfolio, /scroll=\{true\}/);
+  assert.match(portfolio, /navigateToPage/);
+  assert.match(portfolio, /router\.push\(href, \{ scroll: true \}\)/);
+  assert.match(portfolio, /window\.setTimeout/);
+  assert.match(portfolio, /\}, 200\);/);
+  assert.match(portfolio, /page-panel-leaving/);
   assert.match(portfolio, /view !== "works"/);
   assert.match(portfolio, /view !== "about"/);
   assert.match(portfolio, /className="banner-image"/);
@@ -143,7 +148,15 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(topbarRule, /inset-inline:\s*0/);
   assert.match(styles, /will-change:\s*opacity, transform/);
   assert.match(styles, /\.topbar-hidden\s*\{[^}]*visibility:\s*hidden/s);
-  assert.match(styles, /\.view-enter\s*\{[^}]*animation:\s*view-enter/s);
+  assert.match(
+    styles,
+    /\.view-enter\s*\{[^}]*animation:\s*view-enter 300ms ease 150ms forwards/s,
+  );
+  assert.match(
+    styles,
+    /\.page-panel-leaving\s*\{[^}]*transform:\s*translateY\(1rem\)/s,
+  );
+  assert.match(styles, /transform:\s*translateY\(2rem\)/);
 
   await assert.rejects(
     access(
