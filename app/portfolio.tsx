@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   type MouseEvent as ReactMouseEvent,
   useEffect,
@@ -422,24 +422,31 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           </section>
         </aside>
 
-        <motion.article
-          className="article-card"
-          key={pathname}
-          initial={{ opacity: 0, y: 16 }}
-          animate={
-            isPageLeaving
-              ? reducedMotion
-                ? { opacity: 0 }
-                : { opacity: 0, y: -8 }
-              : { opacity: 1, y: 0 }
-          }
-          transition={
-            reducedMotion
-              ? { duration: 0.06, ease: "easeOut" }
-              : { duration: 0.25, ease: "easeOut" }
-          }
-          onAnimationComplete={completePageExit}
-        >
+        <AnimatePresence mode="wait" onExitComplete={completePageExit}>
+          {!isPageLeaving && (
+            <motion.article
+              className="article-card"
+              key={pathname}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: reducedMotion
+                  ? { duration: 0.06, ease: "easeOut" }
+                  : {
+                      delay: 0.065,
+                      duration: 0.38,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
+              }}
+              exit={{
+                opacity: 0,
+                ...(reducedMotion ? {} : { y: -8 }),
+                transition: reducedMotion
+                  ? { duration: 0.06, ease: "easeOut" }
+                  : { duration: 0.2, ease: "easeOut" },
+              }}
+            >
           {view !== "works" && (
             <>
           <div className="article-heading" id="tentang">
@@ -603,7 +610,9 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           </section>
           )}
 
-        </motion.article>
+            </motion.article>
+          )}
+        </AnimatePresence>
       </div>
 
       <button
