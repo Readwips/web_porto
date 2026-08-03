@@ -1015,7 +1015,7 @@ a {
   }
 
   .nav-menu {
-    gap: 28px;
+    gap: clamp(18px, 5vw, 28px);
     padding: 3px 16px 2px;
     font-size: 0.92rem;
   }

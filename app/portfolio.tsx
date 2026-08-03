@@ -100,7 +100,7 @@ const technologies = [
   },
 ];
 
-export type PortfolioView = "home" | "works" | "about";
+export type PortfolioView = "home" | "works" | "about" | "learning";
 
 export default function Portfolio({ view }: { view: PortfolioView }) {
   const pathname = usePathname();
@@ -264,6 +264,10 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
   const selectedTechnologyData =
     technologies.find((technology) => technology.name === selectedTechnology) ??
     technologies[0];
+  const showsAbout = view === "home" || view === "about";
+  const showsProjects = view === "home" || view === "works";
+  const showsLearning =
+    view === "home" || view === "about" || view === "learning";
 
   return (
     <main className="portfolio">
@@ -291,13 +295,15 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           }
         >
           <Link
-            className={view === "home" ? "active" : ""}
-            href="/"
+            className={view === "home" || view === "about" ? "active" : ""}
+            href="/tentang"
             scroll={true}
-            onClick={(event) => navigateToPage(event, "/", "home")}
-            aria-current={view === "home" ? "page" : undefined}
+            onClick={(event) =>
+              navigateToPage(event, "/tentang", "about")
+            }
+            aria-current={view === "about" ? "page" : undefined}
           >
-            Beranda
+            Tentang
           </Link>
           <Link
             className={view === "works" ? "active" : ""}
@@ -306,16 +312,18 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
             onClick={(event) => navigateToPage(event, "/karya", "works")}
             aria-current={view === "works" ? "page" : undefined}
           >
-            Karya
+            Project
           </Link>
           <Link
-            className={view === "about" ? "active" : ""}
-            href="/tentang"
+            className={view === "learning" ? "active" : ""}
+            href="/pendalaman"
             scroll={true}
-            onClick={(event) => navigateToPage(event, "/tentang", "about")}
-            aria-current={view === "about" ? "page" : undefined}
+            onClick={(event) =>
+              navigateToPage(event, "/pendalaman", "learning")
+            }
+            aria-current={view === "learning" ? "page" : undefined}
           >
-            Tentang
+            Pendalaman
           </Link>
         </motion.nav>
       </header>
@@ -478,7 +486,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
                 transition: { duration: 0.22, ease: "easeOut" },
               }}
             >
-          {view !== "works" && (
+          {showsAbout && (
             <>
           <div className="article-heading" id="tentang">
             <span className="article-kicker">PROFIL / 2026</span>
@@ -526,7 +534,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
             </>
           )}
 
-          {view !== "about" && (
+          {showsProjects && (
           <section className="article-section" id="proyek">
             <div className="section-title-row">
               <h2>Latest Works</h2>
@@ -615,7 +623,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
 
           {view === "home" && <hr />}
 
-          {view !== "works" && (
+          {showsLearning && (
           <section className="article-section" id="belajar">
             <div className="section-title-row">
               <h2>Currently Learning</h2>

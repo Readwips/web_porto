@@ -33,9 +33,10 @@ test("server-renders the complete portfolio", async () => {
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="id"/i);
   assert.match(html, /Setyo Agung Prabowo — IT Support &amp; Data Management/);
-  assert.match(html, />Beranda</);
-  assert.match(html, />Karya</);
   assert.match(html, />Tentang</);
+  assert.match(html, />Project</);
+  assert.match(html, />Pendalaman</);
+  assert.doesNotMatch(html, />Beranda|>Karya/);
   assert.match(html, /About Me/);
   assert.match(html, /What I Do/);
   assert.doesNotMatch(html, /💡|🛠|🌱/);
@@ -55,18 +56,21 @@ test("server-renders the complete portfolio", async () => {
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });
 
-test("renders Karya and Tentang as focused pages", async () => {
-  const [worksResponse, aboutResponse] = await Promise.all([
+test("renders Project, Tentang, and Pendalaman as focused pages", async () => {
+  const [worksResponse, aboutResponse, learningResponse] = await Promise.all([
     render("/karya"),
     render("/tentang"),
+    render("/pendalaman"),
   ]);
 
   assert.equal(worksResponse.status, 200);
   assert.equal(aboutResponse.status, 200);
+  assert.equal(learningResponse.status, 200);
 
-  const [worksHtml, aboutHtml] = await Promise.all([
+  const [worksHtml, aboutHtml, learningHtml] = await Promise.all([
     worksResponse.text(),
     aboutResponse.text(),
+    learningResponse.text(),
   ]);
 
   assert.match(worksHtml, /Latest Works/);
@@ -85,6 +89,10 @@ test("renders Karya and Tentang as focused pages", async () => {
   assert.match(aboutHtml, /ACTIVE FOCUS/);
   assert.match(aboutHtml, /DATA MANAGEMENT/);
   assert.doesNotMatch(aboutHtml, /Latest Works|Web Katalog Buku/);
+
+  assert.match(learningHtml, /Currently Learning/);
+  assert.match(learningHtml, /IT Support Operations/);
+  assert.doesNotMatch(learningHtml, /About Me|Latest Works/);
 });
 
 test("keeps portfolio metadata and starter cleanup in place", async () => {
@@ -94,6 +102,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
     navigationMotion,
     worksPage,
     aboutPage,
+    learningPage,
     layout,
     packageJson,
     styles,
@@ -106,6 +115,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
     ),
     readFile(new URL("../app/karya/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/tentang/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/pendalaman/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -114,10 +124,12 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(page, /Portfolio view="home"/);
   assert.match(worksPage, /Portfolio view="works"/);
   assert.match(aboutPage, /Portfolio view="about"/);
+  assert.match(learningPage, /Portfolio view="learning"/);
   assert.match(portfolio, /aria-label="Navigasi utama"/);
   assert.match(portfolio, /className="nav-menu"/);
   assert.match(portfolio, /href="\/karya"/);
   assert.match(portfolio, /href="\/tentang"/);
+  assert.match(portfolio, /href="\/pendalaman"/);
   assert.match(portfolio, /scroll=\{true\}/);
   assert.match(portfolio, /navigateToPage/);
   assert.match(
@@ -153,8 +165,9 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   );
   assert.match(portfolio, /window\.setTimeout/);
   assert.doesNotMatch(portfolio, /window\.location/);
-  assert.match(portfolio, /view !== "works"/);
-  assert.match(portfolio, /view !== "about"/);
+  assert.match(portfolio, /showsAbout/);
+  assert.match(portfolio, /showsProjects/);
+  assert.match(portfolio, /showsLearning/);
   assert.match(portfolio, /className="banner-image"/);
   assert.match(portfolio, /FaFacebookF/);
   assert.match(portfolio, /FaInstagram/);
