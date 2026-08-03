@@ -16,10 +16,9 @@ import { useNavigationMotion } from "./navigation-motion-provider";
 const projects = [
   {
     name: "IT Helpdesk & Manajemen Aset",
-    status: "Terbaru",
     description:
       "Aplikasi Laravel untuk mengelola workflow tiket dukungan IT, inventaris perangkat, penugasan aset, riwayat perbaikan, knowledge base, dashboard, dan laporan.",
-    stack: "Laravel · MySQL · Tailwind CSS · Chart.js",
+    stack: ["Laravel", "MySQL", "Tailwind CSS", "Chart.js"],
     href: "https://github.com/Readwips/web_helpdesk",
     details: [
       "Workflow tiket dan pembagian hak akses berdasarkan role",
@@ -29,10 +28,9 @@ const projects = [
   },
   {
     name: "Web Katalog Buku",
-    status: "Project",
     description:
       "Aplikasi katalog yang membantu pengunjung mencari buku berdasarkan judul, penulis, ISBN, atau penerbit serta melihat stok dan lokasi rak.",
-    stack: "Laravel · PHP · Blade · Database",
+    stack: ["Laravel", "PHP", "Blade", "Database"],
     href: "https://github.com/Readwips/Web_Katalog_Buku",
     details: [
       "Pencarian berdasarkan judul, penulis, ISBN, atau penerbit",
@@ -42,10 +40,9 @@ const projects = [
   },
   {
     name: "Tracking Barang & Kontainer",
-    status: "Project",
     description:
       "Sistem tracking logistik untuk memantau barang dan kontainer dengan dukungan dashboard, REST API, serta visualisasi data operasional.",
-    stack: "Laravel · MySQL · REST API · Chart.js",
+    stack: ["Laravel", "MySQL", "REST API", "Chart.js"],
     href: "https://github.com/Readwips/web_tracking_barang",
     details: [
       "Pencatatan dan pemantauan data barang serta kontainer",
@@ -540,39 +537,52 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
                 const isOpen = openProject === index;
 
                 return (
-                <article
-                  className={`project-item ${isOpen ? "open" : ""}`}
-                  key={project.name}
-                >
-                  <div className="project-number" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <div>
-                    <div className="project-title">
-                      <h3>
+                  <article
+                    className={`project-item ${index === 0 ? "project-featured" : ""} ${isOpen ? "open" : ""}`}
+                    key={project.name}
+                  >
+                    <div className="project-card-head">
+                      <span className="project-number" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <div className="project-meta">
+                        {index === 0 && (
+                          <span className="project-badge">TERBARU</span>
+                        )}
                         <a
+                          className="project-repository"
                           href={project.href}
                           target="_blank"
                           rel="noreferrer"
+                          aria-label={`Buka ${project.name} di GitHub`}
                         >
-                          {project.name} <span aria-hidden="true">↗</span>
+                          <FaGithub aria-hidden="true" />
+                          <span>GitHub</span>
+                          <span aria-hidden="true">↗</span>
                         </a>
-                      </h3>
-                      <div className="project-actions">
-                        <span>{project.status}</span>
-                        <button
-                          type="button"
-                          onClick={() => setOpenProject(isOpen ? null : index)}
-                          aria-expanded={isOpen}
-                          aria-controls={`project-details-${index}`}
-                        >
-                          {isOpen ? "Tutup" : "Detail"}
-                          <span aria-hidden="true">⌄</span>
-                        </button>
                       </div>
                     </div>
-                    <p>{project.description}</p>
-                    <small>{project.stack}</small>
+                    <h3>{project.name}</h3>
+                    <p className="project-description">{project.description}</p>
+                    <ul
+                      className="project-stack"
+                      aria-label={`Teknologi ${project.name}`}
+                    >
+                      {project.stack.map((technology) => (
+                        <li key={technology}>{technology}</li>
+                      ))}
+                    </ul>
+                    <button
+                      className="project-toggle"
+                      type="button"
+                      onClick={() => setOpenProject(isOpen ? null : index)}
+                      aria-expanded={isOpen}
+                      aria-controls={`project-details-${index}`}
+                      aria-label={`${isOpen ? "Sembunyikan" : "Tampilkan"} fitur utama ${project.name}`}
+                      title={`${isOpen ? "Sembunyikan" : "Tampilkan"} fitur utama`}
+                    >
+                      <span className="project-chevron" aria-hidden="true" />
+                    </button>
                     <div
                       className="project-details"
                       id={`project-details-${index}`}
@@ -587,8 +597,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
                         </ul>
                       </div>
                     </div>
-                  </div>
-                </article>
+                  </article>
                 );
               })}
             </div>

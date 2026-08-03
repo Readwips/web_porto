@@ -71,6 +71,9 @@ test("renders Karya and Tentang as focused pages", async () => {
 
   assert.match(worksHtml, /Latest Works/);
   assert.match(worksHtml, /IT Helpdesk &amp; Manajemen Aset/);
+  assert.match(worksHtml, /project-item project-featured open/);
+  assert.match(worksHtml, /project-stack/);
+  assert.match(worksHtml, /TERBARU/);
   assert.doesNotMatch(worksHtml, /About Me|What I Do|Currently Learning/);
 
   assert.match(aboutHtml, /About Me/);
