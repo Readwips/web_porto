@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { motion, useReducedMotion } from "motion/react";
 import {
   type MouseEvent as ReactMouseEvent,
   useEffect,
@@ -10,6 +11,7 @@ import {
   useState,
 } from "react";
 import { FaFacebookF, FaGithub, FaInstagram } from "react-icons/fa";
+import { useNavigationMotion } from "./navigation-motion-provider";
 
 const projects = [
   {
@@ -104,14 +106,27 @@ const technologies = [
 export type PortfolioView = "home" | "works" | "about";
 
 export default function Portfolio({ view }: { view: PortfolioView }) {
+  const pathname = usePathname();
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
+  const { navbarIntroPlayed, markNavbarIntroPlayed } = useNavigationMotion();
+  const [navbarShouldAnimate] = useState(() => !navbarIntroPlayed);
+  const pendingHref = useRef<string | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [navbarVisibility, setNavbarVisibility] = useState(1);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(0);
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
-  const [leavingView, setLeavingView] = useState<PortfolioView | null>(null);
-  const navigationTimer = useRef<number | null>(null);
+  const [leavingPath, setLeavingPath] = useState<string | null>(null);
+  const isPageLeaving = leavingPath === pathname;
+
+  useEffect(() => {
+    markNavbarIntroPlayed();
+  }, [markNavbarIntroPlayed]);
+
+  useEffect(() => {
+    pendingHref.current = null;
+  }, [pathname]);
 
   useEffect(() => {
     const updateScrollState = () => {
@@ -132,15 +147,6 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
     };
   }, []);
 
-  useEffect(
-    () => () => {
-      if (navigationTimer.current) {
-        window.clearTimeout(navigationTimer.current);
-      }
-    },
-    [],
-  );
-
   const navigateToPage = (
     event: ReactMouseEvent<HTMLAnchorElement>,
     href: string,
@@ -159,23 +165,28 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
     event.preventDefault();
 
     if (targetView === view) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({
+        top: 0,
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
       return;
     }
 
-    if (navigationTimer.current) {
-      window.clearTimeout(navigationTimer.current);
-    }
+    if (pendingHref.current) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (reducedMotion) {
       router.push(href, { scroll: true });
       return;
     }
 
-    setLeavingView(view);
-    navigationTimer.current = window.setTimeout(() => {
-      router.push(href, { scroll: true });
-    }, 350);
+    pendingHref.current = href;
+    setLeavingPath(pathname);
+  };
+
+  const completePageExit = () => {
+    if (!isPageLeaving || !pendingHref.current) return;
+
+    router.push(pendingHref.current, { scroll: true });
   };
 
   useEffect(() => {
@@ -264,7 +275,19 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           transform: `translate3d(0, ${-16 * (1 - navbarVisibility)}px, 0)`,
         }}
       >
-        <nav className="nav-menu" aria-label="Navigasi utama">
+        <motion.nav
+          className="nav-menu"
+          aria-label="Navigasi utama"
+          initial={
+            navbarShouldAnimate ? { opacity: 0, y: 32 } : false
+          }
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            reducedMotion
+              ? { duration: 0.06 }
+              : { duration: 0.3, ease: "easeOut" }
+          }
+        >
           <Link
             className={view === "home" ? "active" : ""}
             href="/"
@@ -292,7 +315,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           >
             Tentang
           </Link>
-        </nav>
+        </motion.nav>
       </header>
 
       <section className="banner" id="top" aria-label="Sampul portofolio">
@@ -399,11 +422,23 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           </section>
         </aside>
 
-        <article
-          className={`article-card ${
-            leavingView === view ? "page-panel-leaving" : "view-enter"
-          }`}
-          key={view}
+        <motion.article
+          className="article-card"
+          key={pathname}
+          initial={{ opacity: 0, y: 16 }}
+          animate={
+            isPageLeaving
+              ? reducedMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: -8 }
+              : { opacity: 1, y: 0 }
+          }
+          transition={
+            reducedMotion
+              ? { duration: 0.06, ease: "easeOut" }
+              : { duration: 0.25, ease: "easeOut" }
+          }
+          onAnimationComplete={completePageExit}
         >
           {view !== "works" && (
             <>
@@ -568,7 +603,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           </section>
           )}
 
-        </article>
+        </motion.article>
       </div>
 
       <button

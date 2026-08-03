@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NavigationMotionProvider } from "./navigation-motion-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -69,7 +70,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <NavigationMotionProvider>{children}</NavigationMotionProvider>
       </body>
     </html>
   );
