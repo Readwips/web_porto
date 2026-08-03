@@ -139,6 +139,10 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
     /if \(reducedMotion\)\s*\{\s*router\.push\(href/,
   );
   assert.match(portfolio, /showProfilePhoto \? 2800 : 8000/);
+  assert.match(
+    portfolio,
+    /const \[showProfilePhoto, setShowProfilePhoto\] = useState\(true\)/,
+  );
   assert.match(portfolio, /window\.setTimeout/);
   assert.doesNotMatch(portfolio, /window\.location/);
   assert.match(portfolio, /view !== "works"/);

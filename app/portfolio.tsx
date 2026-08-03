@@ -117,7 +117,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(0);
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
-  const [showProfilePhoto, setShowProfilePhoto] = useState(false);
+  const [showProfilePhoto, setShowProfilePhoto] = useState(true);
   const [leavingPath, setLeavingPath] = useState<string | null>(null);
   const isPageLeaving = leavingPath === pathname;
 
