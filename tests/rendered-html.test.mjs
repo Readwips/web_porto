@@ -78,10 +78,22 @@ test("renders Karya and Tentang as focused pages", async () => {
 });
 
 test("keeps portfolio metadata and starter cleanup in place", async () => {
-  const [page, portfolio, worksPage, aboutPage, layout, packageJson, styles] =
-    await Promise.all([
+  const [
+    page,
+    portfolio,
+    navigationMotion,
+    worksPage,
+    aboutPage,
+    layout,
+    packageJson,
+    styles,
+  ] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/portfolio.tsx", import.meta.url), "utf8"),
+    readFile(
+      new URL("../app/navigation-motion-provider.tsx", import.meta.url),
+      "utf8",
+    ),
     readFile(new URL("../app/karya/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/tentang/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
@@ -99,9 +111,20 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /scroll=\{true\}/);
   assert.match(portfolio, /navigateToPage/);
   assert.match(portfolio, /router\.push\(href, \{ scroll: true \}\)/);
-  assert.match(portfolio, /window\.setTimeout/);
-  assert.match(portfolio, /\}, 350\);/);
-  assert.match(portfolio, /page-panel-leaving/);
+  assert.match(portfolio, /from "motion\/react"/);
+  assert.match(portfolio, /usePathname/);
+  assert.match(portfolio, /useReducedMotion/);
+  assert.match(portfolio, /navbarIntroPlayed/);
+  assert.match(layout, /NavigationMotionProvider/);
+  assert.match(navigationMotion, /useState\(false\)/);
+  assert.match(navigationMotion, /markNavbarIntroPlayed/);
+  assert.match(portfolio, /opacity:\s*0, y:\s*32/);
+  assert.match(portfolio, /duration:\s*0\.3, ease:\s*"easeOut"/);
+  assert.match(portfolio, /opacity:\s*0, y:\s*16/);
+  assert.match(portfolio, /opacity:\s*0, y:\s*-8/);
+  assert.match(portfolio, /duration:\s*0\.25, ease:\s*"easeOut"/);
+  assert.match(portfolio, /key=\{pathname\}/);
+  assert.doesNotMatch(portfolio, /window\.setTimeout|window\.location/);
   assert.match(portfolio, /view !== "works"/);
   assert.match(portfolio, /view !== "about"/);
   assert.match(portfolio, /className="banner-image"/);
@@ -148,16 +171,17 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(topbarRule, /inset-inline:\s*0/);
   assert.match(styles, /will-change:\s*opacity, transform/);
   assert.match(styles, /\.topbar-hidden\s*\{[^}]*visibility:\s*hidden/s);
+  assert.doesNotMatch(styles, /\.view-enter|\.page-panel-leaving/);
+  assert.doesNotMatch(styles, /@keyframes view-enter/);
   assert.match(
     styles,
-    /\.view-enter\s*\{[^}]*animation:\s*view-enter 600ms ease 150ms forwards/s,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.nav-menu\s*\{[^}]*opacity:\s*1 !important;[^}]*transform:\s*none !important;/,
   );
   assert.match(
     styles,
-    /\.page-panel-leaving\s*\{[^}]*transform:\s*translateY\(1rem\)/s,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.article-card\s*\{[^}]*transform:\s*none !important;/,
   );
-  assert.match(styles, /opacity 350ms cubic-bezier\(0\.4, 0, 0\.2, 1\)/);
-  assert.match(styles, /transform:\s*translateY\(2rem\)/);
+  assert.match(packageJson, /"motion"/);
 
   await assert.rejects(
     access(
