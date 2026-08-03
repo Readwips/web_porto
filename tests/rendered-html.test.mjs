@@ -38,6 +38,7 @@ test("server-renders the complete portfolio", async () => {
   assert.match(html, />Tentang</);
   assert.match(html, /About Me/);
   assert.match(html, /What I Do/);
+  assert.doesNotMatch(html, /💡|🛠|🌱/);
   assert.match(html, /IT Helpdesk &amp; Manajemen Aset/);
   assert.match(html, /Web Katalog Buku/);
   assert.match(html, /Tracking Barang &amp; Kontainer/);

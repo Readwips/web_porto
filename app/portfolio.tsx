@@ -459,9 +459,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           <hr />
 
           <section className="article-section" id="pekerjaan">
-            <h2>
-              <span aria-hidden="true">💡</span> What I Do
-            </h2>
+            <h2>What I Do</h2>
             <p>Sebagian besar waktu saya digunakan untuk:</p>
             <ul className="work-list">
               <li>
@@ -491,9 +489,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
           {view !== "about" && (
           <section className="article-section" id="proyek">
             <div className="section-title-row">
-              <h2>
-                <span aria-hidden="true">🛠</span> Latest Works
-              </h2>
+              <h2>Latest Works</h2>
               <span className="small-note">GITHUB PROJECTS</span>
             </div>
             <div className="project-list">
@@ -569,9 +565,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
 
           {view !== "works" && (
           <section className="article-section" id="belajar">
-            <h2>
-              <span aria-hidden="true">🌱</span> Currently Learning
-            </h2>
+            <h2>Currently Learning</h2>
             <div className="learning-grid">
               <div>
                 <span>01</span>
