@@ -822,35 +822,94 @@ a {
 
 .learning-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.learning-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 226px;
+  flex-direction: column;
+  padding: 22px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: linear-gradient(
+    145deg,
+    rgba(116, 185, 255, 0.055),
+    var(--card-raised) 48%
+  );
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.learning-card::after {
+  position: absolute;
+  right: 22px;
+  bottom: 0;
+  left: 22px;
+  height: 2px;
+  content: "";
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0.65;
+  transform: scaleX(0.32);
+  transform-origin: left;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.learning-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
-.learning-grid div {
-  min-height: 180px;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--card-raised);
-}
-
-.learning-grid span {
-  display: block;
-  margin-bottom: 34px;
+.learning-label {
   color: var(--accent);
   font-family: var(--mono);
-  font-size: 0.58rem;
+  font-size: 0.54rem;
+  letter-spacing: 0.09em;
 }
 
-.learning-grid strong {
+.learning-signal {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px rgba(116, 185, 255, 0.1);
+}
+
+.learning-card h3 {
   display: block;
-  font-size: 0.85rem;
+  margin: 34px 0 0;
+  font-size: 0.98rem;
+  font-weight: 660;
+  letter-spacing: -0.02em;
 }
 
-.learning-grid p {
-  margin: 9px 0 0;
-  font-size: 0.73rem;
-  line-height: 1.55;
+.article-card .learning-card p {
+  margin: 12px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.65;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .learning-card:hover {
+    border-color: rgba(116, 185, 255, 0.34);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.14);
+    transform: translateY(-3px);
+  }
+
+  .learning-card:hover::after {
+    transform: scaleX(1);
+  }
 }
 
 .footer {
@@ -932,12 +991,8 @@ a {
     grid-template-columns: 1fr;
   }
 
-  .learning-grid div {
+  .learning-card {
     min-height: auto;
-  }
-
-  .learning-grid span {
-    margin-bottom: 20px;
   }
 
   .project-list {

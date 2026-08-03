@@ -617,32 +617,47 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
 
           {view !== "works" && (
           <section className="article-section" id="belajar">
-            <h2>Currently Learning</h2>
-            <div className="learning-grid">
-              <div>
-                <span>01</span>
-                <strong>IT Support Operations</strong>
+            <div className="section-title-row">
+              <h2>Currently Learning</h2>
+              <span className="small-note">ACTIVE FOCUS</span>
+            </div>
+            <div
+              className="learning-grid"
+              aria-label="Fokus pembelajaran saat ini"
+            >
+              <article className="learning-card">
+                <div className="learning-card-head">
+                  <span className="learning-label">IT SUPPORT</span>
+                  <span className="learning-signal" aria-hidden="true" />
+                </div>
+                <h3>IT Support Operations</h3>
                 <p>
                   Troubleshooting, workflow tiket, dokumentasi solusi, dan
                   pengelolaan inventaris perangkat.
                 </p>
-              </div>
-              <div>
-                <span>02</span>
-                <strong>Database & Data Management</strong>
+              </article>
+              <article className="learning-card">
+                <div className="learning-card-head">
+                  <span className="learning-label">DATA MANAGEMENT</span>
+                  <span className="learning-signal" aria-hidden="true" />
+                </div>
+                <h3>Database & Data Management</h3>
                 <p>
                   Perancangan database relasional, kualitas data, transaksi,
                   pelaporan, dan visualisasi informasi.
                 </p>
-              </div>
-              <div>
-                <span>03</span>
-                <strong>Laravel & Automation</strong>
+              </article>
+              <article className="learning-card">
+                <div className="learning-card-head">
+                  <span className="learning-label">DEVELOPMENT</span>
+                  <span className="learning-signal" aria-hidden="true" />
+                </div>
+                <h3>Laravel & Automation</h3>
                 <p>
                   Pengembangan aplikasi internal, REST API, pengujian, keamanan,
                   serta integrasi data dengan Google Sheets.
                 </p>
-              </div>
+              </article>
             </div>
           </section>
           )}

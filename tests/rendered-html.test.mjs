@@ -81,6 +81,9 @@ test("renders Karya and Tentang as focused pages", async () => {
   assert.match(aboutHtml, /About Me/);
   assert.match(aboutHtml, /What I Do/);
   assert.match(aboutHtml, /Currently Learning/);
+  assert.match(aboutHtml, /learning-card/);
+  assert.match(aboutHtml, /ACTIVE FOCUS/);
+  assert.match(aboutHtml, /DATA MANAGEMENT/);
   assert.doesNotMatch(aboutHtml, /Latest Works|Web Katalog Buku/);
 });
 
