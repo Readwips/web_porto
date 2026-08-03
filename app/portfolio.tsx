@@ -434,8 +434,8 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
                 transition: reducedMotion
                   ? { duration: 0.06, ease: "easeOut" }
                   : {
-                      delay: 0.065,
-                      duration: 0.38,
+                      delay: 0.08,
+                      duration: 0.55,
                       ease: [0.22, 1, 0.36, 1],
                     },
               }}
@@ -444,7 +444,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
                 ...(reducedMotion ? {} : { y: -8 }),
                 transition: reducedMotion
                   ? { duration: 0.06, ease: "easeOut" }
-                  : { duration: 0.2, ease: "easeOut" },
+                  : { duration: 0.22, ease: "easeOut" },
               }}
             >
           {view !== "works" && (
