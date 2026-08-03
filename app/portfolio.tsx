@@ -117,6 +117,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(0);
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
+  const [showProfilePhoto, setShowProfilePhoto] = useState(false);
   const [leavingPath, setLeavingPath] = useState<string | null>(null);
   const isPageLeaving = leavingPath === pathname;
 
@@ -127,6 +128,15 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
   useEffect(() => {
     pendingHref.current = null;
   }, [pathname]);
+
+  useEffect(() => {
+    const imageTimer = window.setTimeout(
+      () => setShowProfilePhoto((current) => !current),
+      showProfilePhoto ? 2800 : 8000,
+    );
+
+    return () => window.clearTimeout(imageTimer);
+  }, [showProfilePhoto]);
 
   useEffect(() => {
     const updateScrollState = () => {
@@ -329,13 +339,46 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
         <aside className="sidebar" aria-label="Profil dan keahlian">
           <section className="profile-card">
             <div className="avatar">
-              <Image
-                src="/vivy.jpg"
-                alt="Avatar pixel art berambut biru"
-                width={960}
-                height={960}
-                priority
-              />
+              <motion.div
+                className="profile-image-layer"
+                initial={false}
+                animate={{ opacity: showProfilePhoto ? 0 : 1 }}
+                transition={{
+                  duration: 0.65,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                aria-hidden={showProfilePhoto}
+              >
+                <Image
+                  className="profile-image-avatar"
+                  src="/vivy.jpg"
+                  alt="Avatar pixel art berambut biru"
+                  width={960}
+                  height={960}
+                  sizes="(max-width: 720px) 100px, 275px"
+                  priority
+                />
+              </motion.div>
+              <motion.div
+                className="profile-image-layer"
+                initial={false}
+                animate={{ opacity: showProfilePhoto ? 1 : 0 }}
+                transition={{
+                  duration: 0.65,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                aria-hidden={!showProfilePhoto}
+              >
+                <Image
+                  className="profile-image-photo"
+                  src="/setyo-profile.jpg"
+                  alt="Foto profil Setyo Agung Prabowo"
+                  width={506}
+                  height={608}
+                  sizes="(max-width: 720px) 100px, 275px"
+                  priority
+                />
+              </motion.div>
             </div>
             <h1>Setyo Agung Prabowo</h1>
             <p className="profile-role">IT Support · Data Management</p>

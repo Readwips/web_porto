@@ -43,6 +43,7 @@ test("server-renders the complete portfolio", async () => {
   assert.match(html, /Web Katalog Buku/);
   assert.match(html, /Tracking Barang &amp; Kontainer/);
   assert.match(html, /vivy\.jpg/);
+  assert.match(html, /setyo-profile\.jpg/);
   assert.doesNotMatch(html, /banner-sun|banner-hill|banner-grid/);
   assert.match(html, /Avatar pixel art berambut biru/);
   assert.doesNotMatch(html, /Placeholder foto profil/);
@@ -137,7 +138,9 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
     portfolio,
     /if \(reducedMotion\)\s*\{\s*router\.push\(href/,
   );
-  assert.doesNotMatch(portfolio, /window\.setTimeout|window\.location/);
+  assert.match(portfolio, /showProfilePhoto \? 2800 : 8000/);
+  assert.match(portfolio, /window\.setTimeout/);
+  assert.doesNotMatch(portfolio, /window\.location/);
   assert.match(portfolio, /view !== "works"/);
   assert.match(portfolio, /view !== "about"/);
   assert.match(portfolio, /className="banner-image"/);
@@ -206,5 +209,6 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   );
   await assert.rejects(access(new URL("public/favicon.svg", templateRoot)));
   await access(new URL("public/vivy.jpg", templateRoot));
+  await access(new URL("public/setyo-profile.jpg", templateRoot));
   await access(new URL("public/vivy-background.jpg", templateRoot));
 });
