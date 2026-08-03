@@ -112,7 +112,7 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [navbarVisibility, setNavbarVisibility] = useState(1);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [openProject, setOpenProject] = useState<number | null>(0);
+  const [openProject, setOpenProject] = useState<number | null>(null);
   const [selectedTechnology, setSelectedTechnology] = useState("Laravel");
   const [showProfilePhoto, setShowProfilePhoto] = useState(true);
   const [leavingPath, setLeavingPath] = useState<string | null>(null);
@@ -542,9 +542,6 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
                     key={project.name}
                   >
                     <div className="project-card-head">
-                      <span className="project-number" aria-hidden="true">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
                       <div className="project-meta">
                         {index === 0 && (
                           <span className="project-badge">TERBARU</span>
@@ -589,7 +586,10 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
                       aria-hidden={!isOpen}
                     >
                       <div>
-                        <strong>Fitur utama</strong>
+                        <span className="project-details-kicker">
+                          Fitur utama
+                        </span>
+                        <strong>{project.name}</strong>
                         <ul>
                           {project.details.map((detail) => (
                             <li key={detail}>{detail}</li>
