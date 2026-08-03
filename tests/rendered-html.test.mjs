@@ -110,7 +110,10 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /href="\/tentang"/);
   assert.match(portfolio, /scroll=\{true\}/);
   assert.match(portfolio, /navigateToPage/);
-  assert.match(portfolio, /router\.push\(href, \{ scroll: true \}\)/);
+  assert.match(
+    portfolio,
+    /router\.push\(pendingHref\.current, \{ scroll: true \}\)/,
+  );
   assert.match(portfolio, /from "motion\/react"/);
   assert.match(portfolio, /usePathname/);
   assert.match(portfolio, /useReducedMotion/);
@@ -129,6 +132,10 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /ease:\s*\[0\.22, 1, 0\.36, 1\]/);
   assert.match(portfolio, /duration:\s*0\.22, ease:\s*"easeOut"/);
   assert.match(portfolio, /key=\{pathname\}/);
+  assert.doesNotMatch(
+    portfolio,
+    /if \(reducedMotion\)\s*\{\s*router\.push\(href/,
+  );
   assert.doesNotMatch(portfolio, /window\.setTimeout|window\.location/);
   assert.match(portfolio, /view !== "works"/);
   assert.match(portfolio, /view !== "about"/);
