@@ -149,8 +149,8 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /duration:\s*0\.3, ease:\s*"easeOut"/);
   assert.match(portfolio, /opacity:\s*0, y:\s*20/);
   assert.match(portfolio, /\{ y:\s*-8 \}/);
-  assert.match(portfolio, /delay:\s*0\.08/);
-  assert.match(portfolio, /duration:\s*0\.55/);
+  assert.match(portfolio, /delay:\s*0\.04/);
+  assert.match(portfolio, /duration:\s*0\.38/);
   assert.match(portfolio, /ease:\s*\[0\.22, 1, 0\.36, 1\]/);
   assert.match(portfolio, /duration:\s*0\.22, ease:\s*"easeOut"/);
   assert.match(portfolio, /key=\{pathname\}/);

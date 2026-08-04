@@ -475,8 +475,8 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
                 opacity: 1,
                 y: 0,
                 transition: {
-                  delay: 0.08,
-                  duration: 0.55,
+                  delay: 0.04,
+                  duration: 0.38,
                   ease: [0.22, 1, 0.36, 1],
                 },
               }}
