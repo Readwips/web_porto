@@ -1,54 +1,26 @@
 # Personal Portfolio
 
-Portofolio satu halaman untuk web developer dengan layout blog yang sederhana,
-tema gelap dan terang, navigasi pencarian, serta kartu Open Graph khusus.
+Website portofolio pribadi Setyo Agung Prabowo yang menampilkan profil, bidang yang sedang ditekuni, teknologi yang digunakan, dan proyek-proyek yang telah dibuat.
 
-## Menjalankan proyek
+[Lihat website portofolio](https://setyoagung.vercel.app)
 
-Gunakan Node.js `>=22.13.0`, lalu:
+## Yang Bisa Dilihat dan Dilakukan
 
-```bash
-npm install
-npm run dev
-```
+- Mengenal profil, fokus pekerjaan, dan kemampuan di bidang IT Support serta Data Management.
+- Menjelajahi halaman Tentang, Project, dan Pendalaman melalui navigasi yang sederhana.
+- Melihat pilihan proyek beserta deskripsi, teknologi, fitur utama, dan tautan repositori GitHub.
+- Membuka atau menutup detail fitur pada setiap proyek tanpa meninggalkan halaman.
+- Memilih daftar teknologi untuk membaca penjelasan singkat mengenai penggunaannya.
+- Mengunjungi akun Facebook, Instagram, dan GitHub melalui tautan yang tersedia.
+- Melihat fokus pembelajaran yang sedang dijalani, seperti IT Support, database, Laravel, dan automasi.
+- Menggunakan website dengan nyaman melalui desktop maupun perangkat mobile.
 
-Buka `http://localhost:3000`. Untuk memeriksa build produksi:
+## Fitur yang Masih Dikembangkan
 
-```bash
-npm run build
-npm test
-```
+Fitur berikut merupakan rencana pengembangan dan belum tersedia pada versi saat ini:
 
-## Mengganti identitas dan isi
-
-Semua konten utama berada di `app/page.tsx`.
-
-- Identitas Setyo Agung Prabowo dan deskripsi profesional berada langsung di
-  komponen halaman.
-- Proyek aktual beserta tautan GitHub berada pada konstanta `projects`.
-- Ganti alamat `hello@domainanda.com`.
-- Ganti tautan GitHub dan LinkedIn di bagian kontak.
-- Sesuaikan palet, tipografi, serta jarak di `app/globals.css`.
-
-Metadata pencarian dan social preview berada di `app/layout.tsx`. Gambar
-pratinjau sosial tersedia di `public/og.png`.
-
-## Struktur penting
-
-```text
-app/
-  globals.css       # seluruh sistem visual dan responsive layout
-  layout.tsx        # metadata, social card, dan font
-  page.tsx          # konten dan interaksi portofolio
-public/
-  og.png            # kartu pratinjau saat tautan dibagikan
-tests/
-  rendered-html.test.mjs
-```
-
-## Teknologi
-
-- React dan Next.js
-- vinext dan Vite
-- Cloudflare Workers-compatible output
-- CSS responsif tanpa UI framework tambahan
+- [ ] Halaman kontak dengan email, LinkedIn, atau formulir pesan.
+- [ ] Tombol untuk melihat dan mengunduh CV.
+- [ ] Live demo dan screenshot untuk setiap proyek.
+- [ ] Pencarian dan filter proyek berdasarkan teknologi.
+- [ ] Pilihan tema terang dan gelap.
