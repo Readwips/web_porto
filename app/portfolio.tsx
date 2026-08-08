@@ -108,6 +108,11 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
   const reducedMotion = useReducedMotion();
   const { navbarIntroPlayed, markNavbarIntroPlayed } = useNavigationMotion();
   const [navbarShouldAnimate] = useState(() => !navbarIntroPlayed);
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 720px)").matches,
+  );
   const pendingHref = useRef<string | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [navbarVisibility, setNavbarVisibility] = useState(1);
@@ -121,6 +126,20 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
   useEffect(() => {
     markNavbarIntroPlayed();
   }, [markNavbarIntroPlayed]);
+
+  useEffect(() => {
+    const mobileViewport = window.matchMedia("(max-width: 720px)");
+    const syncMobileViewport = () => {
+      setIsMobileViewport(mobileViewport.matches);
+    };
+
+    syncMobileViewport();
+    mobileViewport.addEventListener("change", syncMobileViewport);
+
+    return () => {
+      mobileViewport.removeEventListener("change", syncMobileViewport);
+    };
+  }, []);
 
   useEffect(() => {
     pendingHref.current = null;
@@ -474,11 +493,19 @@ export default function Portfolio({ view }: { view: PortfolioView }) {
               animate={{
                 opacity: 1,
                 y: 0,
-                transition: {
-                  delay: 0.04,
-                  duration: 0.38,
-                  ease: [0.22, 1, 0.36, 1],
-                },
+                transition: reducedMotion
+                  ? { duration: 0.06 }
+                  : isMobileViewport
+                    ? {
+                        delay: 0,
+                        duration: 0.24,
+                        ease: [0.22, 1, 0.36, 1],
+                      }
+                    : {
+                        delay: 0.04,
+                        duration: 0.38,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
               }}
               exit={{
                 opacity: 0,

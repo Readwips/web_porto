@@ -151,6 +151,9 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /\{ y:\s*-8 \}/);
   assert.match(portfolio, /delay:\s*0\.04/);
   assert.match(portfolio, /duration:\s*0\.38/);
+  assert.match(portfolio, /window\.matchMedia\("\(max-width: 720px\)"\)/);
+  assert.match(portfolio, /isMobileViewport[\s\S]*delay:\s*0,/);
+  assert.match(portfolio, /duration:\s*0\.24/);
   assert.match(portfolio, /ease:\s*\[0\.22, 1, 0\.36, 1\]/);
   assert.match(portfolio, /duration:\s*0\.22, ease:\s*"easeOut"/);
   assert.match(portfolio, /key=\{pathname\}/);
