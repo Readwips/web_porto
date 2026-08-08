@@ -192,7 +192,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(portfolio, /reading-progress/);
   assert.match(portfolio, /back-to-top/);
   assert.match(layout, /generateMetadata/);
-  assert.match(layout, /\/og-v2\.png/);
+  assert.match(layout, /\/portfolio-gfx-header-v2\.png/);
   assert.match(styles, /\.nav-menu a\[aria-current="page"\]/);
   assert.match(styles, /\.banner-image\s*\{[^}]*object-fit:\s*cover/s);
   assert.match(styles, /\.banner-image\s*\{[^}]*object-position:\s*center 56%/s);
