@@ -39,10 +39,10 @@ export async function generateMetadata(): Promise<Metadata> {
         "Portofolio proyek IT Support, manajemen data, dan pengembangan aplikasi internal.",
       images: [
         {
-          url: `${origin}/og.png`,
+          url: `${origin}/og-v2.png`,
           width: 1200,
           height: 630,
-          alt: "Portofolio 2026 — Membangun pengalaman digital yang jernih dan manusiawi",
+          alt: "Portofolio Setyo Agung Prabowo",
         },
       ],
     },
@@ -51,7 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Setyo Agung Prabowo — IT Support & Data Management",
       description:
         "Portofolio proyek IT Support, manajemen data, dan pengembangan aplikasi internal.",
-      images: [`${origin}/og.png`],
+      images: [`${origin}/og-v2.png`],
     },
   };
 }
