@@ -40,9 +40,9 @@ test("server-renders the complete portfolio", async () => {
   assert.match(html, /About Me/);
   assert.match(html, /What I Do/);
   assert.doesNotMatch(html, /💡|🛠|🌱/);
-  assert.match(html, /IT Helpdesk &amp; Manajemen Aset/);
-  assert.match(html, /Web Katalog Buku/);
-  assert.match(html, /Tracking Barang &amp; Kontainer/);
+  assert.match(html, /Latest Works/);
+  assert.match(html, /project-item project-featured/);
+  assert.match(html, /Terakhir diperbarui/);
   assert.match(html, /vivy\.jpg/);
   assert.match(html, /setyo-profile\.jpg/);
   assert.doesNotMatch(html, /banner-sun|banner-hill|banner-grid/);
@@ -74,7 +74,7 @@ test("renders Project, Tentang, and Pendalaman as focused pages", async () => {
   ]);
 
   assert.match(worksHtml, /Latest Works/);
-  assert.match(worksHtml, /IT Helpdesk &amp; Manajemen Aset/);
+  assert.match(worksHtml, /Terakhir diperbarui/);
   assert.match(worksHtml, /project-item project-featured/);
   assert.match(worksHtml, /project-stack/);
   assert.match(worksHtml, /TERBARU/);

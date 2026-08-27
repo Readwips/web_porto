@@ -12,45 +12,7 @@ import {
 } from "react";
 import { FaFacebookF, FaGithub, FaInstagram } from "react-icons/fa";
 import { useNavigationMotion } from "./navigation-motion-provider";
-
-const projects = [
-  {
-    name: "IT Helpdesk & Manajemen Aset",
-    description:
-      "Aplikasi Laravel untuk mengelola workflow tiket dukungan IT, inventaris perangkat, penugasan aset, riwayat perbaikan, knowledge base, dashboard, dan laporan.",
-    stack: ["Laravel", "MySQL", "Tailwind CSS", "Chart.js"],
-    href: "https://github.com/Readwips/web_helpdesk",
-    details: [
-      "Workflow tiket dan pembagian hak akses berdasarkan role",
-      "Inventaris, penugasan, serta riwayat perbaikan aset TI",
-      "Dashboard operasional, knowledge base, dan laporan",
-    ],
-  },
-  {
-    name: "Web Katalog Buku",
-    description:
-      "Aplikasi katalog yang membantu pengunjung mencari buku berdasarkan judul, penulis, ISBN, atau penerbit serta melihat stok dan lokasi rak.",
-    stack: ["Laravel", "PHP", "Blade", "Database"],
-    href: "https://github.com/Readwips/Web_Katalog_Buku",
-    details: [
-      "Pencarian berdasarkan judul, penulis, ISBN, atau penerbit",
-      "Informasi stok dan lokasi rak",
-      "Antarmuka sederhana yang dapat digunakan tanpa login",
-    ],
-  },
-  {
-    name: "Tracking Barang & Kontainer",
-    description:
-      "Sistem tracking logistik untuk memantau barang dan kontainer dengan dukungan dashboard, REST API, serta visualisasi data operasional.",
-    stack: ["Laravel", "MySQL", "REST API", "Chart.js"],
-    href: "https://github.com/Readwips/web_tracking_barang",
-    details: [
-      "Pencatatan dan pemantauan data barang serta kontainer",
-      "Integrasi data melalui REST API",
-      "Dashboard dan visualisasi data operasional",
-    ],
-  },
-];
+import type { Project } from "./projects";
 
 const technologies = [
   {
@@ -102,7 +64,13 @@ const technologies = [
 
 export type PortfolioView = "home" | "works" | "about" | "learning";
 
-export default function Portfolio({ view }: { view: PortfolioView }) {
+export default function Portfolio({
+  view,
+  projects = [],
+}: {
+  view: PortfolioView;
+  projects?: Project[];
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const reducedMotion = useReducedMotion();
