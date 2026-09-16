@@ -1,8 +1,8 @@
 import Portfolio from "./portfolio";
-import { getLatestProjects } from "./projects";
+import { getPortfolioProjects } from "./projects";
 
 export default async function Home() {
-  const projects = await getLatestProjects();
+  const projects = await getPortfolioProjects();
 
-  return <Portfolio view="home" projects={projects} />;
+  return <Portfolio {...projects} />;
 }

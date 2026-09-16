@@ -4,14 +4,15 @@ import test from "node:test";
 
 const templateRoot = new URL("../", import.meta.url);
 
-async function render(path = "/") {
+async function render(path = "/", redirect = "manual") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${path}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
     new Request(`http://localhost${path}`, {
       headers: { accept: "text/html" },
+      redirect,
     }),
     {
       ASSETS: {
@@ -25,318 +26,236 @@ async function render(path = "/") {
   );
 }
 
-test("server-renders the complete portfolio", async () => {
+function section(html, id) {
+  return html.match(
+    new RegExp(`<section\\b[^>]*id="${id}"[^>]*>([\\s\\S]*?)<\\/section>`),
+  )?.[1];
+}
+
+test("server-renders the complete single-page portfolio", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="id"/i);
-  assert.match(html, /Setyo Agung Prabowo — IT Support &amp; Data Management/);
-  assert.match(html, />Tentang</);
-  assert.match(html, />Project</);
-  assert.match(html, />Pendalaman</);
-  assert.doesNotMatch(html, />Beranda|>Karya/);
-  assert.match(html, /About Me/);
-  assert.match(html, /What I Do/);
-  assert.doesNotMatch(html, /💡|🛠|🌱/);
-  assert.match(html, /Latest Works/);
-  assert.match(html, /project-item project-featured/);
-  assert.match(html, /Terakhir diperbarui/);
-  assert.match(html, /vivy\.jpg/);
-  assert.match(html, /setyo-profile\.jpg/);
-  assert.doesNotMatch(html, /banner-sun|banner-hill|banner-grid/);
-  assert.match(html, /Avatar pixel art berambut biru/);
-  assert.doesNotMatch(html, /Placeholder foto profil/);
-  assert.match(html, /https:\/\/www\.facebook\.com\/loempers/);
-  assert.match(html, /https:\/\/www\.instagram\.com\/readwips\//);
-  assert.match(html, /https:\/\/github\.com\/Readwips/);
-  assert.doesNotMatch(html, /Cari bagian portofolio|Gunakan tema/);
-  assert.doesNotMatch(html, /hello@domainanda\.com/);
-  assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
-});
-
-test("renders Project, Tentang, and Pendalaman as focused pages", async () => {
-  const [worksResponse, aboutResponse, learningResponse] = await Promise.all([
-    render("/project"),
-    render("/tentang"),
-    render("/pendalaman"),
-  ]);
-
-  assert.equal(worksResponse.status, 200);
-  assert.equal(aboutResponse.status, 200);
-  assert.equal(learningResponse.status, 200);
-
-  const [worksHtml, aboutHtml, learningHtml] = await Promise.all([
-    worksResponse.text(),
-    aboutResponse.text(),
-    learningResponse.text(),
-  ]);
-
-  assert.match(worksHtml, /Latest Works/);
-  assert.match(worksHtml, /Terakhir diperbarui/);
-  assert.match(worksHtml, /project-item project-featured/);
-  assert.match(worksHtml, /project-stack/);
-  assert.match(worksHtml, /TERBARU/);
-  assert.doesNotMatch(worksHtml, /project-number/);
-  assert.match(worksHtml, /aria-expanded="false"/);
-  assert.doesNotMatch(worksHtml, /About Me|What I Do|Currently Learning/);
-
-  assert.match(aboutHtml, /About Me/);
-  assert.match(aboutHtml, /What I Do/);
-  assert.match(aboutHtml, /Currently Learning/);
-  assert.match(aboutHtml, /learning-card/);
-  assert.match(aboutHtml, /ACTIVE FOCUS/);
-  assert.match(aboutHtml, /DATA MANAGEMENT/);
-  assert.doesNotMatch(aboutHtml, /Latest Works|Web Katalog Buku/);
-
-  assert.match(learningHtml, /Currently Learning/);
-  assert.match(learningHtml, /IT Support Operations/);
-  assert.doesNotMatch(learningHtml, /About Me|Latest Works/);
-});
-
-test("renders internship and training certificates on the relevant pages", async () => {
-  const paths = ["/", "/tentang", "/pendalaman", "/project"];
-  const pages = await Promise.all(
-    paths.map(async (path) => {
-      const response = await render(path);
-      assert.equal(response.status, 200, path);
-      return response.text();
-    }),
+  assert.match(html, /Setyo Agung Prabowo/);
+  assert.match(html, /IT Support &amp; Data Management/);
+  assert.match(html, /Lulusan Sistem Informasi/);
+  assert.match(html, /href="#projects"[^>]*>Lihat Project</);
+  assert.match(html, /href="\/CV_Setyo_Agung_Prabowo\.pdf"[^>]*download/);
+  assert.match(html, /mailto:setyoagungprab@gmail\.com/);
+  assert.match(
+    html,
+    /https:\/\/www\.linkedin\.com\/in\/setyo-agung-prabowo-75b542395/,
   );
+  assert.match(html, /https:\/\/github\.com\/Readwips/);
 
-  for (const [index, html] of pages.entries()) {
-    const experience = html.match(
-      /<section\b[^>]*id="pengalaman"[^>]*>([\s\S]*?)<\/section>/,
-    )?.[1];
-    const certificates = html.match(
-      /<section\b[^>]*id="sertifikat"[^>]*>([\s\S]*?)<\/section>/,
-    )?.[1];
-
-    if (paths[index] === "/" || paths[index] === "/tentang") {
-      assert.ok(experience, `Pengalaman missing on ${paths[index]}`);
-      assert.match(experience, /<h2\b[^>]*>Pengalaman<\/h2>/);
-      assert.match(experience, /<h3>Magang – Sekretariat<\/h3>/);
-      assert.match(experience, /Dinas Perhubungan Kabupaten Bojonegoro/);
-      assert.match(experience, /<time dateTime="2024-09">September 2024<\/time>/i);
-      assert.match(experience, /<time dateTime="2024-10">Oktober 2024<\/time>/i);
-      assert.match(
-        experience,
-        /Sumbang, Bojonegoro, Kabupaten Bojonegoro, Jawa Timur/,
-      );
-    } else {
-      assert.equal(experience, undefined, paths[index]);
-    }
-
-    if (paths[index] === "/project") {
-      assert.equal(certificates, undefined);
-      continue;
-    }
-
-    assert.ok(certificates, `Sertifikat missing on ${paths[index]}`);
-    assert.match(certificates, /<h2\b[^>]*>Sertifikat<\/h2>/);
-    assert.match(certificates, /Teknologi Informasi dan Komunikasi/);
-    const cards = [
-      ...certificates.matchAll(/<article\b[^>]*>([\s\S]*?)<\/article>/g),
-    ];
-    assert.equal(cards.length, 4);
-    const expected = [
-      [
-        "SQL for Data Science",
-        "Simplilearn SkillUp",
-        /pengambilan, penyaringan, pengurutan, serta pengelolaan data/,
-      ],
-      [
-        "Data Analytics Essentials",
-        "Cisco Networking Academy",
-        /Excel, SQL, dan Tableau/,
-      ],
-      [
-        "Computer Hardware Basics",
-        "Cisco Networking Academy",
-        /perangkat seluler, termasuk standar keselamatan kerja/,
-      ],
-      [
-        "Networking Basics",
-        "Cisco Networking Academy",
-        /Ethernet, IPv4 dan IPv6.*troubleshooting konektivitas.*jaringan nirkabel yang aman/,
-      ],
-    ];
-
-    for (const [cardIndex, [, card]] of cards.entries()) {
-      const [name, issuer, description] = expected[cardIndex];
-      assert.ok(card.includes(`<h3>${name}</h3>`));
-      assert.ok(card.includes(issuer));
-      assert.match(card, /Sertifikat Pelatihan/);
-      assert.equal(
-        [...card.matchAll(/<time dateTime="2026-09">September 2026<\/time>/gi)].length,
-        2,
-      );
-      assert.match(card, description);
-      assert.doesNotMatch(card, /<a\b|<button\b/);
-    }
+  const ids = [
+    "about",
+    "projects",
+    "experience",
+    "skills",
+    "certificates",
+    "learning",
+    "contact",
+  ];
+  let previousIndex = 0;
+  for (const id of ids) {
+    const currentIndex = html.indexOf(`id="${id}"`);
+    assert.ok(currentIndex > previousIndex, `${id} order`);
+    previousIndex = currentIndex;
   }
 });
 
-test("configures the asset and image bindings required by the worker", async () => {
-  const viteConfig = await readFile(
-    new URL("../vite.config.ts", import.meta.url),
-    "utf8",
-  );
-  const workerConfig = JSON.parse(await readFile(
-    new URL("../dist/server/wrangler.json", import.meta.url),
-    "utf8",
-  ));
+test("uses accessible anchor navigation and a mobile menu", async () => {
+  const html = await (await render()).text();
+  const nav = html.match(
+    /<nav\b[^>]*aria-label="Navigasi utama"[^>]*>([\s\S]*?)<\/nav>/,
+  )?.[1];
 
-  assert.match(viteConfig, /assets:\s*\{\s*binding:\s*"ASSETS"\s*\}/);
-  assert.match(viteConfig, /images:\s*\{\s*binding:\s*"IMAGES"\s*\}/);
-  assert.equal(workerConfig.assets.binding, "ASSETS");
-  assert.equal(workerConfig.images.binding, "IMAGES");
+  assert.ok(nav);
+  for (const [label, href] of [
+    ["Tentang", "#about"],
+    ["Project", "#projects"],
+    ["Pengalaman", "#experience"],
+    ["Skills", "#skills"],
+    ["Sertifikat", "#certificates"],
+    ["Kontak", "#contact"],
+  ]) {
+    assert.match(nav, new RegExp(`href="${href}"[^>]*>${label}<`));
+  }
+  assert.match(html, /aria-controls="primary-navigation"/);
+  assert.match(html, /aria-expanded="false"/);
+  assert.match(html, /Lewati ke konten utama/);
+  assert.doesNotMatch(nav, /href="\/(?:tentang|project|pendalaman)"/);
 });
 
-test("keeps portfolio metadata and starter cleanup in place", async () => {
-  const [
-    page,
-    portfolio,
-    navigationMotion,
-    worksPage,
-    aboutPage,
-    learningPage,
-    layout,
-    packageJson,
-    styles,
-  ] = await Promise.all([
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/portfolio.tsx", import.meta.url), "utf8"),
-    readFile(
-      new URL("../app/navigation-motion-provider.tsx", import.meta.url),
-      "utf8",
-    ),
-    readFile(new URL("../app/project/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/tentang/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/pendalaman/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../package.json", import.meta.url), "utf8"),
+test("renders curated featured projects independently of repository names", async () => {
+  const projects = await (await render()).text();
+  const projectData = await readFile(
+    new URL("../app/project-data.ts", import.meta.url),
+    "utf8",
+  );
+  const names = [
+    "IT Helpdesk Ticket Analysis",
+    "DeviceWorth",
+    "CareerPath",
+    "LogiTrack AI",
+  ];
+  for (const name of names) {
+    assert.ok(projects.includes(name), `${name} rendered`);
+  }
+  assert.equal((projects.match(/class="project-card"/g) ?? []).length, 4);
+
+  assert.doesNotMatch(projects, /<h3>Apk Mmmmm<\/h3>/i);
+  assert.match(projectData, /priority: 1/);
+  assert.match(projectData, /priority: 2/);
+  assert.match(projectData, /priority: 3/);
+  assert.match(projectData, /priority: 4/);
+  assert.match(projects, /Kotlin/);
+  assert.match(projects, /Jetpack Compose/);
+  assert.match(projects, /GitHub/);
+  assert.match(projects, /Demo/);
+  assert.match(projects, /More on GitHub/i);
+});
+
+test("keeps local projects when GitHub enrichment is unavailable", async () => {
+  const source = await readFile(new URL("../app/projects.ts", import.meta.url), "utf8");
+  const projectData = await readFile(
+    new URL("../app/project-data.ts", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /const featuredProjects = enrichProjects\(\[\]\)/);
+  assert.match(
+    source,
+    /catch\s*\{\s*return \{ featuredProjects, otherProjects: \[\], githubAvailable: false \}/,
+  );
+  assert.match(projectData, /repo: "apk_mmmmm"/);
+  assert.match(projectData, /displayName: "DeviceWorth"/);
+  assert.match(projectData, /priority: 1/);
+  assert.match(projectData, /priority: 4/);
+});
+
+test("renders detailed experience, categorized skills, certificates, and contact", async () => {
+  const html = await (await render()).text();
+  const experience = section(html, "experience");
+  const skills = section(html, "skills");
+  const certificates = section(html, "certificates");
+  const contact = section(html, "contact");
+
+  assert.ok(experience);
+  assert.match(experience, /Magang — Sekretariat/);
+  assert.match(experience, /Dinas Perhubungan Kabupaten Bojonegoro/);
+  assert.match(experience, /Mengelola dan melakukan validasi data operasional/);
+  assert.match(experience, /Membantu penyusunan laporan/);
+  assert.match(experience, /Mendukung kegiatan administrasi/);
+
+  assert.ok(skills);
+  assert.match(skills, /IT Support/);
+  assert.match(skills, /Data/);
+  assert.match(skills, /Development/);
+  assert.match(skills, /Hardware Troubleshooting/);
+  assert.match(skills, /Excel/);
+  assert.match(skills, /Laravel/);
+
+  assert.ok(certificates);
+  assert.equal((certificates.match(/<article\b/g) ?? []).length, 4);
+  assert.match(certificates, /SQL for Data Science/);
+  assert.match(certificates, /Data Analytics Essentials/);
+  assert.match(certificates, /Computer Hardware Basics/);
+  assert.match(certificates, /Networking Basics/);
+
+  assert.ok(contact);
+  assert.match(contact, /Mari Terhubung/);
+  assert.match(contact, /setyoagungprab@gmail\.com/);
+  assert.match(contact, /LinkedIn/);
+  assert.match(contact, /Download CV/);
+});
+
+test("cycles profile artwork and reveals sections on scroll", async () => {
+  const [html, heroPhoto, scrollReveal, styles] = await Promise.all([
+    render().then((response) => response.text()),
+    readFile(new URL("../app/components/hero-photo.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/components/scroll-reveal.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
-    ]);
+  ]);
 
-  assert.match(page, /Portfolio view="home"/);
-  assert.match(worksPage, /Portfolio view="works"/);
-  assert.match(aboutPage, /Portfolio view="about"/);
-  assert.match(learningPage, /Portfolio view="learning"/);
-  assert.match(portfolio, /aria-label="Navigasi utama"/);
-  assert.match(portfolio, /className="nav-menu"/);
-  assert.match(portfolio, /href="\/project"/);
-  assert.match(portfolio, /href="\/tentang"/);
-  assert.match(portfolio, /href="\/pendalaman"/);
-  assert.match(portfolio, /scroll=\{true\}/);
-  assert.match(portfolio, /navigateToPage/);
-  assert.match(
-    portfolio,
-    /router\.push\(pendingHref\.current, \{ scroll: true \}\)/,
-  );
-  assert.match(portfolio, /from "motion\/react"/);
-  assert.match(portfolio, /usePathname/);
-  assert.match(portfolio, /useReducedMotion/);
-  assert.match(portfolio, /navbarIntroPlayed/);
-  assert.match(layout, /NavigationMotionProvider/);
-  assert.match(layout, /Portofolio Setyo Agung Prabowo/);
-  assert.match(navigationMotion, /useState\(false\)/);
-  assert.match(navigationMotion, /markNavbarIntroPlayed/);
-  assert.match(portfolio, /AnimatePresence/);
-  assert.match(portfolio, /mode="wait"/);
-  assert.match(portfolio, /opacity:\s*0, y:\s*32/);
-  assert.match(portfolio, /duration:\s*0\.3, ease:\s*"easeOut"/);
-  assert.match(portfolio, /opacity:\s*0, y:\s*20/);
-  assert.match(portfolio, /\{ y:\s*-8 \}/);
-  assert.match(portfolio, /delay:\s*0\.04/);
-  assert.match(portfolio, /duration:\s*0\.38/);
-  assert.match(portfolio, /window\.matchMedia\("\(max-width: 720px\)"\)/);
-  assert.match(portfolio, /isMobileViewport[\s\S]*delay:\s*0,/);
-  assert.match(portfolio, /duration:\s*0\.24/);
-  assert.match(portfolio, /ease:\s*\[0\.22, 1, 0\.36, 1\]/);
-  assert.match(portfolio, /duration:\s*0\.22, ease:\s*"easeOut"/);
-  assert.match(portfolio, /key=\{pathname\}/);
-  assert.doesNotMatch(
-    portfolio,
-    /if \(reducedMotion\)\s*\{\s*router\.push\(href/,
-  );
-  assert.match(portfolio, /showProfilePhoto \? 2800 : 8000/);
-  assert.match(
-    portfolio,
-    /const \[showProfilePhoto, setShowProfilePhoto\] = useState\(true\)/,
-  );
-  assert.match(portfolio, /window\.setTimeout/);
-  assert.doesNotMatch(portfolio, /window\.location/);
-  assert.match(portfolio, /showsAbout/);
-  assert.match(portfolio, /showsProjects/);
-  assert.match(portfolio, /showsLearning/);
-  assert.match(portfolio, /className="banner-image"/);
-  assert.match(portfolio, /FaFacebookF/);
-  assert.match(portfolio, /FaInstagram/);
-  assert.match(portfolio, /FaGithub/);
-  assert.match(portfolio, /src="\/vivy-background\.jpg"/);
-  assert.match(portfolio, /aria-current=/);
-  assert.doesNotMatch(portfolio, /portfolio-theme|searchOpen|theme-toggle/);
-  assert.match(portfolio, /navbarVisibility/);
-  assert.match(portfolio, /1 - window\.scrollY \/ 160/);
-  assert.match(portfolio, /translate3d/);
-  assert.match(portfolio, /requestAnimationFrame/);
-  assert.match(portfolio, /passive:\s*false/);
-  assert.match(portfolio, /prefers-reduced-motion:\s*reduce/);
-  assert.match(portfolio, /pointer:\s*fine/);
-  assert.match(portfolio, /event\.ctrlKey/);
-  assert.match(portfolio, /aria-expanded=\{isOpen\}/);
-  assert.match(portfolio, /selectedTechnology/);
-  assert.match(portfolio, /reading-progress/);
-  assert.match(portfolio, /back-to-top/);
-  assert.match(layout, /generateMetadata/);
-  assert.match(layout, /\/portfolio-gfx-header-v2\.png/);
-  assert.match(styles, /\.nav-menu a\[aria-current="page"\]/);
-  assert.match(styles, /\.banner-image\s*\{[^}]*object-fit:\s*cover/s);
-  assert.match(styles, /\.banner-image\s*\{[^}]*object-position:\s*center 56%/s);
-  assert.match(styles, /\.social-row svg\s*\{[^}]*width:\s*13px/s);
-  assert.doesNotMatch(styles, /\.banner::(?:before|after)/);
-  assert.doesNotMatch(styles, /filter:\s*brightness/);
-  assert.doesNotMatch(packageJson, /react-loading-skeleton/);
-
-  const navMenuRule = styles.match(/\.nav-menu\s*\{([^}]*)\}/)?.[1] ?? "";
-  const topbarRule = styles.match(/\.topbar\s*\{([^}]*)\}/)?.[1] ?? "";
-  assert.match(navMenuRule, /width:\s*fit-content/);
-  assert.match(navMenuRule, /margin:\s*0 auto/);
-  assert.match(navMenuRule, /border-radius:\s*14px/);
-  assert.match(navMenuRule, /background:\s*#080b10/);
-  assert.doesNotMatch(
-    navMenuRule,
-    /width:\s*(?:100%|100vw)|(?:left|right):\s*0/,
-  );
-  assert.match(topbarRule, /background:\s*transparent/);
-  assert.match(topbarRule, /position:\s*fixed/);
-  assert.match(topbarRule, /inset-inline:\s*0/);
-  assert.match(styles, /will-change:\s*opacity, transform/);
-  assert.match(styles, /\.topbar-hidden\s*\{[^}]*visibility:\s*hidden/s);
-  assert.doesNotMatch(styles, /\.view-enter|\.page-panel-leaving/);
-  assert.doesNotMatch(styles, /@keyframes view-enter/);
+  assert.match(html, /vivy\.jpg/);
+  assert.match(html, /setyo-profile\.jpg/);
+  assert.match(heroPhoto, /window\.setInterval/);
+  assert.match(heroPhoto, /window\.clearInterval/);
+  assert.match(heroPhoto, /}, 4000\)/);
+  assert.doesNotMatch(heroPhoto, /is-revealing/);
+  assert.doesNotMatch(heroPhoto, /window\.setTimeout/);
+  assert.doesNotMatch(heroPhoto, /prefers-reduced-motion: reduce/);
+  assert.match(scrollReveal, /IntersectionObserver/);
+  assert.match(scrollReveal, /observer\.disconnect\(\)/);
+  assert.match(scrollReveal, /prefers-reduced-motion: reduce/);
+  assert.match(styles, /\.hero-photo-layer/);
+  assert.match(styles, /aspect-ratio:\s*5 \/ 6/);
+  assert.match(styles, /swap-layer-in 800ms/);
+  assert.match(styles, /swap-img-in 800ms/);
+  assert.match(styles, /swap-img-out 800ms/);
+  assert.match(styles, /scale\(1\.15\)/);
+  assert.match(styles, /scale\(1\.08\)/);
+  assert.match(styles, /image-rendering:\s*pixelated/);
+  assert.doesNotMatch(styles, /\.is-revealing/);
+  assert.match(styles, /\.reveal-ready/);
+  assert.match(styles, /\.is-visible/);
   assert.match(
     styles,
-    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.nav-menu\s*\{[^}]*opacity:\s*1 !important;[^}]*transform:\s*none !important;/,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.reveal-ready/,
   );
-  assert.match(
-    styles,
-    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.article-card\s*\{[^}]*transform:\s*none !important;/,
-  );
-  assert.match(packageJson, /"motion"/);
 
+  await access(new URL("../public/vivy.jpg", import.meta.url));
+});
+
+test("redirects legacy pages to their homepage sections", async () => {
+  for (const [path, destination] of [
+    ["/tentang", "/#about"],
+    ["/project", "/#projects"],
+    ["/pendalaman", "/#learning"],
+  ]) {
+    const response = await render(path);
+    assert.equal(response.status, 308, path);
+    assert.equal(new URL(response.headers.get("location")).pathname, "/");
+    assert.equal(new URL(response.headers.get("location")).hash, destination.slice(1));
+  }
+});
+
+test("configures SEO, responsive styles, assets, and worker bindings", async () => {
+  const [layout, styles, viteConfig, workerConfig] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../vite.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../dist/server/wrangler.json", import.meta.url), "utf8"),
+  ]);
+  const parsedWorkerConfig = JSON.parse(workerConfig);
+
+  assert.match(layout, /https:\/\/setyoagung\.is-a\.dev/);
+  assert.match(layout, /alternates: \{ canonical: "\/" \}/);
+  assert.match(layout, /Portfolio Setyo Agung Prabowo/);
+  assert.match(styles, /scroll-behavior:\s*smooth/);
+  assert.match(styles, /scroll-margin-top:\s*80px/);
+  assert.match(styles, /@media \(max-width: 1024px\)/);
+  assert.match(styles, /@media \(max-width: 768px\)/);
+  assert.match(styles, /@media \(max-width: 480px\)/);
+  assert.match(styles, /overflow-x:\s*hidden/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(styles, /:focus-visible/);
+  assert.match(viteConfig, /assets:\s*\{\s*binding:\s*"ASSETS"\s*\}/);
+  assert.match(viteConfig, /images:\s*\{\s*binding:\s*"IMAGES"\s*\}/);
+  assert.equal(parsedWorkerConfig.assets.binding, "ASSETS");
+  assert.equal(parsedWorkerConfig.images.binding, "IMAGES");
+
+  await access(new URL("../public/CV_Setyo_Agung_Prabowo.pdf", import.meta.url));
+  await access(new URL("../public/setyo-profile.jpg", import.meta.url));
+  await access(new URL("../public/portfolio-gfx-header-v2.png", import.meta.url));
+  await access(new URL("../app/robots.ts", import.meta.url));
+  await access(new URL("../app/sitemap.ts", import.meta.url));
   await assert.rejects(
-    access(
-      new URL(
-        "app/_sites-preview/SkeletonPreview.tsx",
-        templateRoot,
-      ),
-    ),
+    access(new URL("app/navigation-motion-provider.tsx", templateRoot)),
   );
-  await assert.rejects(access(new URL("public/favicon.svg", templateRoot)));
-  await access(new URL("public/vivy.jpg", templateRoot));
-  await access(new URL("public/setyo-profile.jpg", templateRoot));
-  await access(new URL("public/vivy-background.jpg", templateRoot));
 });
