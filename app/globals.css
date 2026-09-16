@@ -900,6 +900,18 @@ a {
   line-height: 1.65;
 }
 
+.credential-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.credential-card {
+  min-height: auto;
+}
+
+.credential-card h3 {
+  margin-top: 16px;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .learning-card:hover {
     border-color: rgba(116, 185, 255, 0.34);

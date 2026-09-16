@@ -62,6 +62,33 @@ const technologies = [
   },
 ];
 
+const certificates = [
+  {
+    name: "SQL for Data Science",
+    issuer: "Simplilearn SkillUp",
+    description:
+      "Mempelajari dasar-dasar SQL untuk pengolahan dan analisis data, meliputi pengambilan, penyaringan, pengurutan, serta pengelolaan data dalam database.",
+  },
+  {
+    name: "Data Analytics Essentials",
+    issuer: "Cisco Networking Academy",
+    description:
+      "Mempelajari proses analisis data, pengumpulan dan transformasi data, statistika dasar, persiapan data, serta praktik menggunakan Excel, SQL, dan Tableau.",
+  },
+  {
+    name: "Computer Hardware Basics",
+    issuer: "Cisco Networking Academy",
+    description:
+      "Mempelajari perakitan, perbaikan, peningkatan, dan pemeliharaan perangkat keras komputer, laptop, serta perangkat seluler, termasuk standar keselamatan kerja.",
+  },
+  {
+    name: "Networking Basics",
+    issuer: "Cisco Networking Academy",
+    description:
+      "Pelatihan dasar jaringan komputer yang membahas komunikasi jaringan, jenis dan komponen jaringan, Ethernet, IPv4 dan IPv6, fungsi router, troubleshooting konektivitas, serta konfigurasi jaringan nirkabel yang aman.",
+  },
+];
+
 export type PortfolioView = "home" | "works" | "about" | "learning";
 
 export default function Portfolio({
@@ -294,9 +321,9 @@ export default function Portfolio({
           </Link>
           <Link
             className={view === "works" ? "active" : ""}
-            href="/karya"
+            href="/project"
             scroll={true}
-            onClick={(event) => navigateToPage(event, "/karya", "works")}
+            onClick={(event) => navigateToPage(event, "/project", "works")}
             aria-current={view === "works" ? "page" : undefined}
           >
             Project
@@ -526,6 +553,29 @@ export default function Portfolio({
 
           <hr />
 
+          <section
+            className="article-section"
+            id="pengalaman"
+            aria-labelledby="pengalaman-title"
+          >
+            <h2 id="pengalaman-title">Pengalaman</h2>
+            <article className="learning-card credential-card">
+              <span className="learning-label">MAGANG</span>
+              <h3>Magang – Sekretariat</h3>
+              <p>
+                <strong>Dinas Perhubungan Kabupaten Bojonegoro</strong>
+              </p>
+              <p>
+                <time dateTime="2024-09">September 2024</time>
+                {" – "}
+                <time dateTime="2024-10">Oktober 2024</time>
+              </p>
+              <p>Sumbang, Bojonegoro, Kabupaten Bojonegoro, Jawa Timur</p>
+            </article>
+          </section>
+
+          <hr />
+
             </>
           )}
 
@@ -619,6 +669,42 @@ export default function Portfolio({
           {view === "home" && <hr />}
 
           {showsLearning && (
+            <>
+          <section
+            className="article-section"
+            id="sertifikat"
+            aria-labelledby="sertifikat-title"
+          >
+            <div className="section-title-row">
+              <h2 id="sertifikat-title">Sertifikat</h2>
+              <span className="small-note">
+                Teknologi Informasi dan Komunikasi
+              </span>
+            </div>
+            <div className="learning-grid credential-grid">
+              {certificates.map((certificate) => (
+                <article
+                  className="learning-card credential-card"
+                  key={certificate.name}
+                >
+                  <span className="learning-label">Sertifikat Pelatihan</span>
+                  <h3>{certificate.name}</h3>
+                  <p>
+                    <strong>{certificate.issuer}</strong>
+                  </p>
+                  <p>
+                    <time dateTime="2026-09">September 2026</time>
+                    {" – "}
+                    <time dateTime="2026-09">September 2026</time>
+                  </p>
+                  <p>{certificate.description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <hr />
+
           <section className="article-section" id="belajar">
             <div className="section-title-row">
               <h2>Currently Learning</h2>
@@ -663,6 +749,7 @@ export default function Portfolio({
               </article>
             </div>
           </section>
+            </>
           )}
 
             </motion.article>

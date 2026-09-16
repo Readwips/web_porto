@@ -58,7 +58,7 @@ test("server-renders the complete portfolio", async () => {
 
 test("renders Project, Tentang, and Pendalaman as focused pages", async () => {
   const [worksResponse, aboutResponse, learningResponse] = await Promise.all([
-    render("/karya"),
+    render("/project"),
     render("/tentang"),
     render("/pendalaman"),
   ]);
@@ -95,6 +95,105 @@ test("renders Project, Tentang, and Pendalaman as focused pages", async () => {
   assert.doesNotMatch(learningHtml, /About Me|Latest Works/);
 });
 
+test("renders internship and training certificates on the relevant pages", async () => {
+  const paths = ["/", "/tentang", "/pendalaman", "/project"];
+  const pages = await Promise.all(
+    paths.map(async (path) => {
+      const response = await render(path);
+      assert.equal(response.status, 200, path);
+      return response.text();
+    }),
+  );
+
+  for (const [index, html] of pages.entries()) {
+    const experience = html.match(
+      /<section\b[^>]*id="pengalaman"[^>]*>([\s\S]*?)<\/section>/,
+    )?.[1];
+    const certificates = html.match(
+      /<section\b[^>]*id="sertifikat"[^>]*>([\s\S]*?)<\/section>/,
+    )?.[1];
+
+    if (paths[index] === "/" || paths[index] === "/tentang") {
+      assert.ok(experience, `Pengalaman missing on ${paths[index]}`);
+      assert.match(experience, /<h2\b[^>]*>Pengalaman<\/h2>/);
+      assert.match(experience, /<h3>Magang – Sekretariat<\/h3>/);
+      assert.match(experience, /Dinas Perhubungan Kabupaten Bojonegoro/);
+      assert.match(experience, /<time dateTime="2024-09">September 2024<\/time>/i);
+      assert.match(experience, /<time dateTime="2024-10">Oktober 2024<\/time>/i);
+      assert.match(
+        experience,
+        /Sumbang, Bojonegoro, Kabupaten Bojonegoro, Jawa Timur/,
+      );
+    } else {
+      assert.equal(experience, undefined, paths[index]);
+    }
+
+    if (paths[index] === "/project") {
+      assert.equal(certificates, undefined);
+      continue;
+    }
+
+    assert.ok(certificates, `Sertifikat missing on ${paths[index]}`);
+    assert.match(certificates, /<h2\b[^>]*>Sertifikat<\/h2>/);
+    assert.match(certificates, /Teknologi Informasi dan Komunikasi/);
+    const cards = [
+      ...certificates.matchAll(/<article\b[^>]*>([\s\S]*?)<\/article>/g),
+    ];
+    assert.equal(cards.length, 4);
+    const expected = [
+      [
+        "SQL for Data Science",
+        "Simplilearn SkillUp",
+        /pengambilan, penyaringan, pengurutan, serta pengelolaan data/,
+      ],
+      [
+        "Data Analytics Essentials",
+        "Cisco Networking Academy",
+        /Excel, SQL, dan Tableau/,
+      ],
+      [
+        "Computer Hardware Basics",
+        "Cisco Networking Academy",
+        /perangkat seluler, termasuk standar keselamatan kerja/,
+      ],
+      [
+        "Networking Basics",
+        "Cisco Networking Academy",
+        /Ethernet, IPv4 dan IPv6.*troubleshooting konektivitas.*jaringan nirkabel yang aman/,
+      ],
+    ];
+
+    for (const [cardIndex, [, card]] of cards.entries()) {
+      const [name, issuer, description] = expected[cardIndex];
+      assert.ok(card.includes(`<h3>${name}</h3>`));
+      assert.ok(card.includes(issuer));
+      assert.match(card, /Sertifikat Pelatihan/);
+      assert.equal(
+        [...card.matchAll(/<time dateTime="2026-09">September 2026<\/time>/gi)].length,
+        2,
+      );
+      assert.match(card, description);
+      assert.doesNotMatch(card, /<a\b|<button\b/);
+    }
+  }
+});
+
+test("configures the asset and image bindings required by the worker", async () => {
+  const viteConfig = await readFile(
+    new URL("../vite.config.ts", import.meta.url),
+    "utf8",
+  );
+  const workerConfig = JSON.parse(await readFile(
+    new URL("../dist/server/wrangler.json", import.meta.url),
+    "utf8",
+  ));
+
+  assert.match(viteConfig, /assets:\s*\{\s*binding:\s*"ASSETS"\s*\}/);
+  assert.match(viteConfig, /images:\s*\{\s*binding:\s*"IMAGES"\s*\}/);
+  assert.equal(workerConfig.assets.binding, "ASSETS");
+  assert.equal(workerConfig.images.binding, "IMAGES");
+});
+
 test("keeps portfolio metadata and starter cleanup in place", async () => {
   const [
     page,
@@ -113,7 +212,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
       new URL("../app/navigation-motion-provider.tsx", import.meta.url),
       "utf8",
     ),
-    readFile(new URL("../app/karya/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/project/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/tentang/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/pendalaman/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
@@ -127,7 +226,7 @@ test("keeps portfolio metadata and starter cleanup in place", async () => {
   assert.match(learningPage, /Portfolio view="learning"/);
   assert.match(portfolio, /aria-label="Navigasi utama"/);
   assert.match(portfolio, /className="nav-menu"/);
-  assert.match(portfolio, /href="\/karya"/);
+  assert.match(portfolio, /href="\/project"/);
   assert.match(portfolio, /href="\/tentang"/);
   assert.match(portfolio, /href="\/pendalaman"/);
   assert.match(portfolio, /scroll=\{true\}/);
