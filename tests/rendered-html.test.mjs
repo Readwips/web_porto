@@ -202,6 +202,28 @@ test("cycles profile artwork and reveals sections on scroll", async () => {
   assert.match(styles, /scale\(1\.08\)/);
   assert.match(styles, /image-rendering:\s*pixelated/);
   assert.doesNotMatch(styles, /\.is-revealing/);
+  assert.match(styles, /@keyframes hero-title-reveal/);
+  assert.match(styles, /@keyframes hero-role-reveal/);
+  assert.match(
+    styles,
+    /\.hero-role\s*\{[^}]*animation:\s*hero-role-reveal 700ms[^}]*animation-delay:\s*200ms/s,
+  );
+  assert.match(
+    styles,
+    /@keyframes hero-role-reveal[\s\S]*clip-path:\s*inset\(-10% -10% 100% -10%\)/,
+  );
+  assert.match(
+    styles,
+    /\.hero-summary\s*\{[^}]*animation:\s*hero-role-reveal 700ms[^}]*animation-delay:\s*450ms/s,
+  );
+  assert.match(
+    styles,
+    /:not\(\.hero-photo, \.hero-photo \*, \.hero h1, \.hero-role, \.hero-summary\)/,
+  );
+  assert.doesNotMatch(
+    styles,
+    /\.hero h1,[\s\S]*animation:\s*none !important/,
+  );
   assert.match(styles, /\.reveal-ready/);
   assert.match(styles, /\.is-visible/);
   assert.match(
