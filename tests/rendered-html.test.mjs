@@ -206,7 +206,7 @@ test("cycles profile artwork and reveals sections on scroll", async () => {
   assert.match(styles, /@keyframes hero-role-reveal/);
   assert.match(
     styles,
-    /\.hero-role\s*\{[^}]*animation:\s*hero-role-reveal 700ms[^}]*animation-delay:\s*200ms/s,
+    /\.hero-role\s*\{[^}]*animation:\s*hero-role-reveal 1200ms[^}]*animation-delay:\s*200ms/s,
   );
   assert.match(
     styles,
@@ -214,7 +214,7 @@ test("cycles profile artwork and reveals sections on scroll", async () => {
   );
   assert.match(
     styles,
-    /\.hero-summary\s*\{[^}]*animation:\s*hero-role-reveal 700ms[^}]*animation-delay:\s*450ms/s,
+    /\.hero-summary\s*\{[^}]*animation:\s*hero-role-reveal 1200ms[^}]*animation-delay:\s*450ms/s,
   );
   assert.match(
     styles,
@@ -226,7 +226,7 @@ test("cycles profile artwork and reveals sections on scroll", async () => {
   );
   assert.match(styles, /\.reveal-ready/);
   assert.match(styles, /\.is-visible/);
-  assert.doesNotMatch(styles, /hero-action-split/);
+  assert.doesNotMatch(styles, /hero-action-split-left/);
 
   await access(new URL("../public/vivy.jpg", import.meta.url));
 });
