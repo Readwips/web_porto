@@ -234,6 +234,23 @@ test("cycles profile artwork and reveals sections on scroll", async () => {
   await access(new URL("../public/vivy.jpg", import.meta.url));
 });
 
+test("reveals hero actions as one control splitting into two buttons", async () => {
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(styles, /\.hero-action-split-left/);
+  assert.match(styles, /\.hero-action-split-right/);
+  assert.match(styles, /@keyframes hero-action-split-left/);
+  assert.match(styles, /@keyframes hero-action-split-right/);
+  assert.match(
+    styles,
+    /@media \(max-width: 480px\)[\s\S]*hero-action-split-top[\s\S]*hero-action-split-bottom/,
+  );
+  assert.match(
+    styles,
+    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.hero-action-split-left[\s\S]*animation:\s*none !important/,
+  );
+});
+
 test("redirects legacy pages to their homepage sections", async () => {
   for (const [path, destination] of [
     ["/tentang", "/#about"],

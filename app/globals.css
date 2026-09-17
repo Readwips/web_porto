@@ -275,9 +275,18 @@ main > .section.reveal-ready.is-visible {
 }
 
 .hero-actions {
+  --hero-actions-delay: 1200ms;
   margin-top: 32px;
-  animation: hero-fade-up 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 1750ms;
+}
+
+.hero-action-split-left {
+  animation: hero-action-split-left 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--hero-actions-delay);
+}
+
+.hero-action-split-right {
+  animation: hero-action-split-right 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--hero-actions-delay);
 }
 
 .social-links {
@@ -425,6 +434,40 @@ main > .section.reveal-ready.is-visible {
     clip-path: inset(-10% -10% -10% -10%);
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes hero-action-split-left {
+  0% {
+    opacity: 0;
+    transform: translateX(30%) scale(0.92);
+  }
+
+  40% {
+    opacity: 1;
+    transform: translateX(12%) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes hero-action-split-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-30%) scale(0.92);
+  }
+
+  40% {
+    opacity: 1;
+    transform: translateX(-12%) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }
 
@@ -1119,6 +1162,16 @@ main > .section.reveal-ready.is-visible {
     width: 100%;
   }
 
+  .hero-action-split-left {
+    animation: hero-action-split-top 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 1200ms;
+  }
+
+  .hero-action-split-right {
+    animation: hero-action-split-bottom 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 1200ms;
+  }
+
   .project-visual {
     min-height: 180px;
     padding: 22px;
@@ -1141,6 +1194,40 @@ main > .section.reveal-ready.is-visible {
   }
 }
 
+@keyframes hero-action-split-top {
+  0% {
+    opacity: 0;
+    transform: translateY(30%) scale(0.92);
+  }
+
+  40% {
+    opacity: 1;
+    transform: translateY(12%) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hero-action-split-bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(-30%) scale(0.92);
+  }
+
+  40% {
+    opacity: 1;
+    transform: translateY(-12%) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1153,7 +1240,8 @@ main > .section.reveal-ready.is-visible {
   }
 
   .eyebrow,
-  .hero-actions,
+  .hero-action-split-left,
+  .hero-action-split-right,
   .social-links {
     animation: none !important;
   }
