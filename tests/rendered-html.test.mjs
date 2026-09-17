@@ -226,29 +226,17 @@ test("cycles profile artwork and reveals sections on scroll", async () => {
   );
   assert.match(styles, /\.reveal-ready/);
   assert.match(styles, /\.is-visible/);
-  assert.match(
-    styles,
-    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.reveal-ready/,
-  );
+  assert.doesNotMatch(styles, /hero-action-split/);
 
   await access(new URL("../public/vivy.jpg", import.meta.url));
 });
 
-test("reveals hero actions as one control splitting into two buttons", async () => {
+test("reveals hero actions using synchronized fade up", async () => {
   const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(styles, /\.hero-action-split-left/);
-  assert.match(styles, /\.hero-action-split-right/);
-  assert.match(styles, /@keyframes hero-action-split-left/);
-  assert.match(styles, /@keyframes hero-action-split-right/);
-  assert.match(
-    styles,
-    /@media \(max-width: 480px\)[\s\S]*hero-action-split-top[\s\S]*hero-action-split-bottom/,
-  );
-  assert.match(
-    styles,
-    /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.hero-action-split-left[\s\S]*animation:\s*none !important/,
-  );
+  assert.match(styles, /\.hero-actions/);
+  assert.match(styles, /@keyframes hero-fade-up/);
+  assert.doesNotMatch(styles, /hero-action-split-top/);
 });
 
 test("redirects legacy pages to their homepage sections", async () => {

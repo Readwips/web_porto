@@ -15,14 +15,10 @@ export default function Hero() {
             yang membantu pekerjaan operasional.
           </p>
           <div className="hero-actions">
-            <a className="button hero-action-split-left" href="#projects">
+            <a className="button" href="#projects">
               Lihat Project
             </a>
-            <a
-              className="button button-secondary hero-action-split-right"
-              href={profile.cv}
-              download
-            >
+            <a className="button button-secondary" href={profile.cv} download>
               Download CV
             </a>
           </div>
