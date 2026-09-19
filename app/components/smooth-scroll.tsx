@@ -13,6 +13,8 @@ export default function SmoothScroll() {
 
     (window as any).__lenis = lenis;
 
+    window.scrollTo({ top: 0, behavior: "instant" });
+
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
