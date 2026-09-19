@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "./components/smooth-scroll";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,10 +62,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" style={{ scrollBehavior: "smooth" }}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
-      </body>
+          <SmoothScroll />
+          {children}
+        </body>
     </html>
   );
 }

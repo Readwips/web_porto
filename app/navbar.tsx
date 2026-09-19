@@ -10,8 +10,20 @@ export default function Navbar() {
   const menuButton = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
-  const handleNavClick = () => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const href = e.currentTarget.getAttribute("href");
+    if (!href?.startsWith("#")) return;
+    e.preventDefault();
     setIsOpen(false);
+    const target = document.querySelector(href);
+    if (!target) return;
+    const lenis = (window as any).__lenis;
+    if (lenis) {
+      lenis.scrollTo(target, { offset: -72, duration: 5.4 });
+    } else {
+      const top = target.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
   };
 
   useEffect(() => {
