@@ -10,22 +10,6 @@ export default function Navbar() {
   const menuButton = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const href = e.currentTarget.getAttribute("href");
-    if (!href?.startsWith("#")) return;
-    e.preventDefault();
-    setIsOpen(false);
-    const target = document.querySelector(href);
-    if (!target) return;
-    const lenis = (window as any).__lenis;
-    if (lenis) {
-      lenis.scrollTo(target, { offset: -72, duration: 5.4 });
-    } else {
-      const top = target.getBoundingClientRect().top + window.scrollY - 72;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
-  };
-
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
     setIsMobile(mq.matches);
@@ -37,19 +21,17 @@ export default function Navbar() {
   useEffect(() => {
     if (!isOpen) return;
 
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
+    const closeOnEscape = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
       setIsOpen(false);
       menuButton.current?.focus();
     };
 
-    const closeOnClickOutside = (event: MouseEvent | TouchEvent) => {
+    const closeOnClickOutside = (e: MouseEvent | TouchEvent) => {
       if (
-        menuButton.current?.contains(event.target as Node) ||
-        navRef.current?.contains(event.target as Node)
-      ) {
-        return;
-      }
+        menuButton.current?.contains(e.target as Node) ||
+        navRef.current?.contains(e.target as Node)
+      ) return;
       setIsOpen(false);
     };
 
@@ -72,7 +54,7 @@ export default function Navbar() {
       aria-label="Navigasi utama"
     >
       {navItems.map((item) => (
-        <a key={item.href} href={item.href} onClick={handleNavClick}>
+        <a key={item.href} href={item.href} onClick={() => setIsOpen(false)}>
           {item.label}
         </a>
       ))}
@@ -91,7 +73,7 @@ export default function Navbar() {
     <>
       <header className="site-header">
         <div className="container navbar-shell">
-          <a className="brand" href="#top" onClick={() => setIsOpen(false)}>
+          <a className="brand" href="#top">
             <img src="/logo_r.png" alt="Setyo Agung" className="brand-logo" />
           </a>
           <button
@@ -100,8 +82,8 @@ export default function Navbar() {
             type="button"
             aria-expanded={isOpen}
             aria-controls="primary-navigation"
-            aria-label={isOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
-            onClick={() => setIsOpen((current) => !current)}
+            aria-label={isOpen ? "Tutup menu" : "Buka menu"}
+            onClick={() => setIsOpen((v) => !v)}
           >
             <span />
             <span />

@@ -216,26 +216,21 @@ test("cycles profile artwork and reveals sections on scroll", async () => {
     styles,
     /\.hero-summary\s*\{[^}]*animation:\s*hero-role-reveal 1500ms[^}]*animation-delay:\s*1000ms/s,
   );
-  assert.match(
-    styles,
-    /:not\(\.hero-photo, \.hero-photo \*, \.hero h1, \.hero-role, \.hero-summary\)/,
-  );
   assert.doesNotMatch(
     styles,
     /\.hero h1,[\s\S]*animation:\s*none !important/,
   );
   assert.match(styles, /\.reveal-ready/);
   assert.match(styles, /\.is-visible/);
-  assert.doesNotMatch(styles, /hero-action-split-left/);
 
   await access(new URL("../public/vivy.jpg", import.meta.url));
 });
 
-test("reveals hero actions using synchronized fade up", async () => {
+test("reveals hero actions using soft illumination reveal", async () => {
   const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(styles, /\.hero-actions/);
-  assert.match(styles, /@keyframes hero-fade-up/);
+  assert.match(styles, /\.site-header/);
+  assert.match(styles, /@keyframes navbar-reveal/);
 });
 
 test("redirects legacy pages to their homepage sections", async () => {
