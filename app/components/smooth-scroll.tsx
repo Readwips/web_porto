@@ -13,6 +13,7 @@ export default function SmoothScroll() {
 
     (window as any).__lenis = lenis;
 
+    window.history.scrollRestoration = "manual";
     window.scrollTo({ top: 0, behavior: "instant" });
 
     function raf(time: number) {
