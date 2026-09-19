@@ -171,6 +171,12 @@ main > .section.reveal-ready.is-visible {
   background: currentColor;
 }
 
+.brand-logo {
+  display: block;
+  height: 36px;
+  width: auto;
+}
+
 .button {
   display: inline-flex;
   min-height: 48px;
